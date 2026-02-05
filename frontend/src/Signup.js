@@ -5,7 +5,7 @@ function Signup({ onSignup }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [weight, setWeight] = useState('');
-  const [age, setAge] = useState('');
+  const [dob, setDob] = useState('');
   const [goal, setGoal] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -17,7 +17,7 @@ function Signup({ onSignup }) {
     setSuccess(false);
     setLoading(true);
     try {
-      await axios.post('http://localhost:4000/api/signup', { username, password, weight: parseFloat(weight), age: parseInt(age), goal });
+      await axios.post('http://localhost:4000/api/signup', { username, password, weight: parseFloat(weight), dob, goal });
       setSuccess(true);
     } catch (err) {
       setError('Signup failed. Username may already exist.');
@@ -113,29 +113,15 @@ function Signup({ onSignup }) {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Your Age</label>
-              <div style={{ position: 'relative' }}>
-                <input 
-                  type="number" 
-                  className="form-input"
-                  placeholder="Enter your age" 
-                  value={age} 
-                  onChange={e => setAge(e.target.value)} 
-                  min="13"
-                  max="120"
-                  required 
-                  style={{ paddingRight: '60px' }}
-                />
-                <span style={{
-                  position: 'absolute',
-                  right: '15px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  color: '#636e72',
-                  fontWeight: '600',
-                  fontSize: '14px'
-                }}>years</span>
-              </div>
+              <label className="form-label">Date of Birth</label>
+              <input 
+                type="date" 
+                className="form-input"
+                value={dob} 
+                onChange={e => setDob(e.target.value)} 
+                max={new Date().toISOString().split('T')[0]}
+                required 
+              />
               <small style={{ color: '#636e72', fontSize: '12px', marginTop: '5px', display: 'block' }}>
                 🎂 Helps us calculate your daily calorie needs
               </small>
