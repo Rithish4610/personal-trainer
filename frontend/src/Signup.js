@@ -4,6 +4,7 @@ import axios from 'axios';
 function Signup({ onSignup }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [weight, setWeight] = useState('');
   const [goal, setGoal] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -15,7 +16,7 @@ function Signup({ onSignup }) {
     setSuccess(false);
     setLoading(true);
     try {
-      await axios.post('http://localhost:4000/api/signup', { username, password, goal });
+      await axios.post('http://localhost:4000/api/signup', { username, password, weight: parseFloat(weight), goal });
       setSuccess(true);
     } catch (err) {
       setError('Signup failed. Username may already exist.');
@@ -78,6 +79,36 @@ function Signup({ onSignup }) {
                 onChange={e => setPassword(e.target.value)} 
                 required 
               />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Your Weight (kg)</label>
+              <div style={{ position: 'relative' }}>
+                <input 
+                  type="number" 
+                  className="form-input"
+                  placeholder="Enter your weight" 
+                  value={weight} 
+                  onChange={e => setWeight(e.target.value)} 
+                  min="20"
+                  max="300"
+                  step="0.1"
+                  required 
+                  style={{ paddingRight: '50px' }}
+                />
+                <span style={{
+                  position: 'absolute',
+                  right: '15px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  color: '#636e72',
+                  fontWeight: '600',
+                  fontSize: '14px'
+                }}>kg</span>
+              </div>
+              <small style={{ color: '#636e72', fontSize: '12px', marginTop: '5px', display: 'block' }}>
+                ⚖️ We'll use this to personalize your nutrition goals
+              </small>
             </div>
 
             <div className="form-group">
