@@ -437,6 +437,27 @@ function Dashboard({ goal }) {
   };
 
   // Calculate nutrition for a single meal
+  // Check if a food entry contains a valid food name
+  const isValidFoodEntry = (entry) => {
+    if (!entry || !entry.trim()) return false;
+    const entryLower = entry.toLowerCase().trim();
+    const parts = entryLower.split(' ');
+    
+    // Check if entry itself is a food name
+    if (foodData[entryLower]) return true;
+    
+    // Check if first word is a food name (e.g., "egg 3")
+    if (foodData[parts[0]]) return true;
+    
+    // Check if first two words are a food name (e.g., "brown bread 2")
+    if (parts.length >= 2 && foodData[parts.slice(0, 2).join(' ')]) return true;
+    
+    // Check if first three words are a food name
+    if (parts.length >= 3 && foodData[parts.slice(0, 3).join(' ')]) return true;
+    
+    return false;
+  };
+
   const calculateMeal = (label, foods) => {
     const resultArr = [];
     foods.filter(f => f.trim()).forEach(food => {
@@ -471,7 +492,8 @@ function Dashboard({ goal }) {
       setMealResults(results);
     };
 
-    const hasFoods = foods.some(f => f.trim());
+    // Only show calculate button if at least one food entry is valid
+    const hasValidFoods = foods.some(f => isValidFoodEntry(f));
 
     // Calculate totals for this meal
     const totals = mealResults ? mealResults.reduce((acc, item) => ({
@@ -509,7 +531,7 @@ function Dashboard({ goal }) {
           >
             + Add Food
           </button>
-          {hasFoods && (
+          {hasValidFoods && (
             <button 
               onClick={handleCalculateMeal}
               style={{ 
