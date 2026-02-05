@@ -365,11 +365,14 @@ function Dashboard({ goal }) {
       setShowSuggestions(false);
     };
 
+    const isValid = isValidFoodEntry(value);
+
     return (
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-        <div style={{ position: 'relative', display: 'inline-block' }}>
+      <div className="food-input-wrapper">
+        <div style={{ position: 'relative', flex: 1 }}>
           <input
             type="text"
+            className="food-input"
             placeholder={placeholder}
             value={value}
             onChange={e => {
@@ -378,57 +381,38 @@ function Dashboard({ goal }) {
             }}
             onFocus={() => setShowSuggestions(true)}
             onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
-            style={{ width: '250px', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+            style={{
+              borderColor: value && isValid ? '#00d4aa' : value ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.1)',
+              width: '100%'
+            }}
           />
-          {showSuggestions && suggestions.length > 0 && (
-            <ul style={{
+          {value && isValid && (
+            <span style={{
               position: 'absolute',
-              top: '100%',
-              left: 0,
-              right: 0,
-              background: '#fff',
-              border: '1px solid #ccc',
-              borderRadius: '4px',
-              listStyle: 'none',
-              margin: 0,
-              padding: 0,
-              zIndex: 100,
-              maxHeight: '180px',
-              overflowY: 'auto',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
-            }}>
+              right: '15px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: '#00d4aa',
+              fontSize: '18px'
+            }}>✓</span>
+          )}
+          {showSuggestions && suggestions.length > 0 && (
+            <div className="suggestions-dropdown">
               {suggestions.map((s, idx) => (
-                <li
+                <div
                   key={idx}
+                  className="suggestion-item"
                   onMouseDown={() => handleSelect(s)}
-                  style={{
-                    padding: '8px 12px',
-                    cursor: 'pointer',
-                    borderBottom: '1px solid #eee',
-                    background: '#fff'
-                  }}
-                  onMouseOver={e => e.currentTarget.style.background = '#f0f0f0'}
-                  onMouseOut={e => e.currentTarget.style.background = '#fff'}
                 >
-                  {s}
-                </li>
+                  <span className="suggestion-icon">🍽️</span>
+                  <span>{s}</span>
+                </div>
               ))}
-            </ul>
+            </div>
           )}
         </div>
         {showRemove && (
-          <button 
-            onClick={onRemove} 
-            style={{ 
-              marginLeft: '8px', 
-              padding: '6px 12px', 
-              background: '#ff4444', 
-              color: '#fff', 
-              border: 'none', 
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}
-          >
+          <button onClick={onRemove} className="btn-remove">
             ✕
           </button>
         )}
@@ -467,7 +451,7 @@ function Dashboard({ goal }) {
   };
 
   // Multi-food input section for a meal time
-  const MealSection = ({ label, foods, setFoods, placeholder }) => {
+  const MealSection = ({ label, foods, setFoods, placeholder, mealClass, icon, time }) => {
     const [mealResults, setMealResults] = useState(null);
 
     const addFood = () => {
@@ -504,8 +488,15 @@ function Dashboard({ goal }) {
     }), { protein: 0, carbs: 0, fiber: 0, fat: 0 }) : null;
 
     return (
-      <div style={{ marginBottom: '24px', padding: '16px', background: '#f9f9f9', borderRadius: '8px' }}>
-        <h4 style={{ marginTop: 0, marginBottom: '12px', color: '#333' }}>{label}:</h4>
+      <div className={`meal-card ${mealClass || ''}`}>
+        <div className="meal-card-header">
+          <div className="meal-icon">{icon || '🍽️'}</div>
+          <div>
+            <h4 className="meal-title">{label}</h4>
+            <span className="meal-time">{time || ''}</span>
+          </div>
+        </div>
+        
         {foods.map((food, index) => (
           <FoodInput
             key={index}
@@ -516,67 +507,47 @@ function Dashboard({ goal }) {
             showRemove={foods.length > 1}
           />
         ))}
-        <div style={{ display: 'flex', gap: '10px', marginTop: '8px' }}>
-          <button 
-            onClick={addFood}
-            style={{ 
-              padding: '6px 16px', 
-              background: '#4CAF50', 
-              color: '#fff', 
-              border: 'none', 
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '14px'
-            }}
-          >
-            + Add Food
+        
+        <div className="meal-actions">
+          <button onClick={addFood} className="btn-add-food">
+            <span>➕</span> Add Food
           </button>
           {hasValidFoods && (
-            <button 
-              onClick={handleCalculateMeal}
-              style={{ 
-                padding: '6px 16px', 
-                background: '#2196F3', 
-                color: '#fff', 
-                border: 'none', 
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '14px'
-              }}
-            >
-              Calculate {label}
+            <button onClick={handleCalculateMeal} className="btn-calculate">
+              <span>📊</span> Calculate {label}
             </button>
           )}
         </div>
+
         {mealResults && mealResults.length > 0 && (
-          <div style={{ marginTop: '12px', padding: '12px', background: '#fff', borderRadius: '6px', border: '1px solid #ddd' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
+          <div className="results-container">
+            <table className="results-table">
               <thead>
-                <tr style={{ background: '#f0f0f0' }}>
-                  <th style={{ padding: '8px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>Food</th>
-                  <th style={{ padding: '8px', textAlign: 'right', borderBottom: '1px solid #ddd' }}>Protein (g)</th>
-                  <th style={{ padding: '8px', textAlign: 'right', borderBottom: '1px solid #ddd' }}>Carbs (g)</th>
-                  <th style={{ padding: '8px', textAlign: 'right', borderBottom: '1px solid #ddd' }}>Fiber (g)</th>
-                  <th style={{ padding: '8px', textAlign: 'right', borderBottom: '1px solid #ddd' }}>Fat (g)</th>
+                <tr>
+                  <th>Food</th>
+                  <th style={{ textAlign: 'right' }}>Protein</th>
+                  <th style={{ textAlign: 'right' }}>Carbs</th>
+                  <th style={{ textAlign: 'right' }}>Fiber</th>
+                  <th style={{ textAlign: 'right' }}>Fat</th>
                 </tr>
               </thead>
               <tbody>
                 {mealResults.map((item, idx) => (
                   <tr key={idx}>
-                    <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>{item.food}</td>
-                    <td style={{ padding: '8px', textAlign: 'right', borderBottom: '1px solid #eee' }}>{item.protein}</td>
-                    <td style={{ padding: '8px', textAlign: 'right', borderBottom: '1px solid #eee' }}>{item.carbs}</td>
-                    <td style={{ padding: '8px', textAlign: 'right', borderBottom: '1px solid #eee' }}>{item.fiber}</td>
-                    <td style={{ padding: '8px', textAlign: 'right', borderBottom: '1px solid #eee' }}>{item.fat}</td>
+                    <td>{item.food}</td>
+                    <td style={{ textAlign: 'right' }}>{item.protein}g</td>
+                    <td style={{ textAlign: 'right' }}>{item.carbs}g</td>
+                    <td style={{ textAlign: 'right' }}>{item.fiber}g</td>
+                    <td style={{ textAlign: 'right' }}>{item.fat}g</td>
                   </tr>
                 ))}
                 {mealResults.length > 1 && (
-                  <tr style={{ background: '#e8f5e9', fontWeight: 'bold' }}>
-                    <td style={{ padding: '8px' }}>Total</td>
-                    <td style={{ padding: '8px', textAlign: 'right' }}>{totals.protein.toFixed(2)}</td>
-                    <td style={{ padding: '8px', textAlign: 'right' }}>{totals.carbs.toFixed(2)}</td>
-                    <td style={{ padding: '8px', textAlign: 'right' }}>{totals.fiber.toFixed(2)}</td>
-                    <td style={{ padding: '8px', textAlign: 'right' }}>{totals.fat.toFixed(2)}</td>
+                  <tr className="results-total">
+                    <td><strong>Total</strong></td>
+                    <td style={{ textAlign: 'right' }}><strong>{totals.protein.toFixed(2)}g</strong></td>
+                    <td style={{ textAlign: 'right' }}><strong>{totals.carbs.toFixed(2)}g</strong></td>
+                    <td style={{ textAlign: 'right' }}><strong>{totals.fiber.toFixed(2)}g</strong></td>
+                    <td style={{ textAlign: 'right' }}><strong>{totals.fat.toFixed(2)}g</strong></td>
                   </tr>
                 )}
               </tbody>
@@ -595,54 +566,138 @@ function Dashboard({ goal }) {
            nightFoods.some(f => f.trim());
   };
 
+  // Check if any valid food is entered for total calculation
+  const hasAnyValidFood = () => {
+    return morningFoods.some(f => isValidFoodEntry(f)) || 
+           eveningFoods.some(f => isValidFoodEntry(f)) || 
+           postEveningFoods.some(f => isValidFoodEntry(f)) || 
+           nightFoods.some(f => isValidFoodEntry(f));
+  };
+
+  // Motivational quotes
+  const quotes = [
+    { text: "The only bad workout is the one that didn't happen.", author: "Unknown" },
+    { text: "Take care of your body. It's the only place you have to live.", author: "Jim Rohn" },
+    { text: "Fitness is not about being better than someone else. It's about being better than you used to be.", author: "Khloe Kardashian" },
+    { text: "Your body can stand almost anything. It's your mind that you have to convince.", author: "Unknown" }
+  ];
+  
+  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+
+  // Get goal icon
+  const getGoalIcon = () => {
+    switch(goal?.toLowerCase()) {
+      case 'fat loss': return '🔥';
+      case 'muscle': return '💪';
+      case 'general fitness': return '🏃';
+      default: return '🎯';
+    }
+  };
+
   return (
-    <div>
-      <h2>Your Dashboard</h2>
-      <p>Goal: {goal || 'Not set'}</p>
-      <div style={{marginTop: '20px'}}>
-        <h3>Food Tracker</h3>
+    <div className="dashboard">
+      {/* Dashboard Header */}
+      <div className="dashboard-header">
+        <div className="welcome-section">
+          <h1>Welcome, <span>Champion!</span></h1>
+          <p>Track your meals and crush your fitness goals today</p>
+        </div>
+        {goal && (
+          <div className="goal-badge">
+            <span className="goal-badge-icon">{getGoalIcon()}</span>
+            Goal: {goal.charAt(0).toUpperCase() + goal.slice(1)}
+          </div>
+        )}
+      </div>
+
+      {/* Motivational Quote */}
+      <div className="quote-card">
+        <p className="quote-text">{randomQuote.text}</p>
+        <p className="quote-author">— {randomQuote.author}</p>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="stats-grid">
+        <div className="stat-card">
+          <div className="stat-icon">🍽️</div>
+          <div className="stat-value">{morningFoods.filter(f => f.trim()).length + eveningFoods.filter(f => f.trim()).length + postEveningFoods.filter(f => f.trim()).length + nightFoods.filter(f => f.trim()).length}</div>
+          <div className="stat-label">Foods Logged</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon">🥗</div>
+          <div className="stat-value">4</div>
+          <div className="stat-label">Meals Tracked</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon">📊</div>
+          <div className="stat-value">{results ? results.reduce((acc, r) => acc + r.protein, 0).toFixed(0) : '0'}g</div>
+          <div className="stat-label">Total Protein</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon">⚡</div>
+          <div className="stat-value">{results ? results.reduce((acc, r) => acc + r.carbs, 0).toFixed(0) : '0'}g</div>
+          <div className="stat-label">Total Carbs</div>
+        </div>
+      </div>
+
+      {/* Food Tracker Section */}
+      <div className="food-tracker-section">
+        <div className="section-header">
+          <div className="section-icon">🍴</div>
+          <div>
+            <h2 className="section-title">Food Tracker</h2>
+            <p className="section-subtitle">Log your meals and track your nutrition</p>
+          </div>
+        </div>
+
         <MealSection 
           label="Morning" 
           foods={morningFoods} 
           setFoods={setMorningFoods} 
-          placeholder="Enter morning food (e.g., egg 2, rice 200g)" 
+          placeholder="e.g., egg 3, brown bread 2, milk 200" 
+          mealClass="meal-morning"
+          icon="🌅"
+          time="6:00 AM - 10:00 AM"
         />
         <MealSection 
           label="Evening" 
           foods={eveningFoods} 
           setFoods={setEveningFoods} 
-          placeholder="Enter evening food" 
+          placeholder="e.g., rice 200, chicken 150, dal 100" 
+          mealClass="meal-evening"
+          icon="☀️"
+          time="12:00 PM - 2:00 PM"
         />
         <MealSection 
           label="Post Evening" 
           foods={postEveningFoods} 
           setFoods={setPostEveningFoods} 
-          placeholder="Enter post evening food" 
+          placeholder="e.g., banana 2, almonds 30" 
+          mealClass="meal-post-evening"
+          icon="🌆"
+          time="4:00 PM - 6:00 PM"
         />
         <MealSection 
           label="Night" 
           foods={nightFoods} 
           setFoods={setNightFoods} 
-          placeholder="Enter night food" 
+          placeholder="e.g., chapathi 3, paneer 100" 
+          mealClass="meal-night"
+          icon="🌙"
+          time="7:00 PM - 9:00 PM"
         />
-        {hasAnyFood() && (
+
+        {hasAnyValidFood() && (
           <button 
-            style={{
-              marginTop: '16px', 
-              padding: '12px 24px', 
-              fontSize: '16px',
-              background: '#2196F3',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '6px',
-              cursor: 'pointer'
-            }} 
+            className="btn btn-primary btn-lg"
+            style={{ marginTop: '24px' }}
             onClick={handleCalculate}
           >
-            Calculate Nutrition
+            <span>📊</span> Calculate Total Nutrition
           </button>
         )}
       </div>
+
       {results && <FoodResultsDashboard results={results} />}
     </div>
   );
