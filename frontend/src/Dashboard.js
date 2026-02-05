@@ -749,10 +749,10 @@ function Dashboard({ goal, weight, dob, username }) {
 
   // Motivational quotes
   const quotes = [
-    { text: "The only bad workout is the one that didn't happen.", author: "Unknown" },
-    { text: "Take care of your body. It's the only place you have to live.", author: "Jim Rohn" },
-    { text: "Fitness is not about being better than someone else. It's about being better than you used to be.", author: "Khloe Kardashian" },
-    { text: "Your body can stand almost anything. It's your mind that you have to convince.", author: "Unknown" }
+    { text: "The only bad workout is the one that didn't happen.", author: "Rithi" },
+    { text: "Take care of your body. It's the only place you have to live.", author: "Rithi" },
+    { text: "Fitness is not about being better than someone else. It's about being better than you used to be.", author: "Rithi" },
+    { text: "Your body can stand almost anything. It's your mind that you have to convince.", author: "Rithi" }
   ];
   
   const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
