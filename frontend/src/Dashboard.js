@@ -47,51 +47,138 @@ function Dashboard({ goal, weight, dob, username }) {
 
   const proteinGoal = getProteinGoal();
 
-  // Get personalized trainer tips based on goal, age, and weight
+  // Get today's date as a number for rotating tips
+  const today = new Date();
+  const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+
+  // Get personalized trainer tips based on goal, age, and weight - CHANGES DAILY!
   const getTrainerTips = () => {
-    const tips = [];
+    const allTips = {
+      'fat loss': [
+        "🔥 Focus on high-protein, low-calorie foods like chicken breast, fish, and egg whites",
+        "💧 Drink at least 3-4 liters of water daily to boost metabolism",
+        "🥗 Fill half your plate with vegetables for fiber and fullness",
+        "⏰ Try intermittent fasting - eat within an 8-hour window",
+        "🚶 Take a 15-minute walk after each meal to aid digestion and burn calories",
+        "🍵 Green tea can boost your metabolism - try 2-3 cups daily",
+        "🥒 Snack on cucumbers, celery, or carrots when hungry between meals",
+        "🍳 Start your day with protein - it reduces cravings throughout the day",
+        "🚫 Avoid liquid calories - sodas and juices add up fast",
+        "😴 Poor sleep increases hunger hormones - aim for 7-8 hours",
+        "🥄 Use smaller plates - it tricks your brain into feeling satisfied",
+        "📝 Track everything you eat - awareness is the first step to change",
+        "🏋️ Add strength training - muscle burns more calories at rest",
+        "🍽️ Eat slowly and chew thoroughly - it takes 20 min to feel full",
+        "🥑 Don't fear healthy fats - they keep you satisfied longer"
+      ],
+      'muscle': [
+        "💪 Eat protein within 30 minutes after your workout for best results",
+        "🍚 Don't skip carbs! They fuel your workouts and muscle growth",
+        "🥚 Include a protein source in every meal (eggs, chicken, fish, paneer)",
+        "😴 Get 7-8 hours of sleep - muscles grow during rest!",
+        "🏋️ Progressive overload is key - increase weights gradually",
+        "🍌 Eat a banana before workout for quick energy",
+        "🥛 Consider a casein protein shake before bed for overnight muscle repair",
+        "💧 Dehydration reduces strength by up to 25% - drink up!",
+        "🍗 Aim for 4-6 protein-rich meals spread throughout the day",
+        "🥩 Red meat is great for muscle - rich in iron and creatine",
+        "🧘 Don't skip rest days - overtraining hurts muscle growth",
+        "🥜 Nuts and nut butters are calorie-dense perfect for gaining mass",
+        "⏰ Train each muscle group 2x per week for optimal growth",
+        "🎯 Focus on compound lifts - squats, deadlifts, bench press",
+        "📊 Track your lifts - what gets measured gets improved"
+      ],
+      'general fitness': [
+        "🏃 Aim for 150 minutes of moderate exercise per week",
+        "🥗 Eat a balanced diet with all food groups",
+        "💧 Stay hydrated - drink 2-3 liters of water daily",
+        "🍎 Include fruits and vegetables in every meal",
+        "🚶 Take the stairs instead of the elevator",
+        "🧘 Try yoga or stretching for flexibility and stress relief",
+        "🚴 Mix cardio and strength training for overall fitness",
+        "😴 Consistent sleep schedule improves energy levels",
+        "🥜 Healthy snacks keep your metabolism active",
+        "📱 Set hourly reminders to stand and stretch if you sit a lot",
+        "🎵 Music can boost workout performance by up to 15%",
+        "👥 Find a workout buddy for accountability and motivation",
+        "🌅 Morning workouts boost energy for the entire day",
+        "🍽️ Meal prep on weekends saves time and ensures healthy eating",
+        "🎯 Set small, achievable weekly goals to stay motivated"
+      ]
+    };
+
+    const ageSpecificTips = {
+      young: [
+        "🌱 Your body is still growing - never skip meals!",
+        "🏃 Your recovery is fast - take advantage with consistent training",
+        "📚 Build good habits now - they'll last a lifetime",
+        "🥛 Calcium is crucial at your age - include dairy or fortified foods"
+      ],
+      prime: [
+        "⚡ This is your prime time - push hard and build good habits!",
+        "💼 Busy schedule? Try 20-minute high-intensity workouts",
+        "🎯 Set ambitious goals - your body can handle the challenge",
+        "🧠 Exercise boosts brain function - great for your career!"
+      ],
+      experienced: [
+        "🎯 Focus on consistency over intensity - sustainable habits win!",
+        "🧘 Include mobility work to prevent injuries",
+        "⚖️ Metabolism slows down - watch portion sizes",
+        "💪 Strength training prevents age-related muscle loss"
+      ],
+      wise: [
+        "🧘 Include flexibility exercises and prioritize recovery",
+        "🚶 Low-impact exercises like swimming and walking are excellent",
+        "🦴 Weight-bearing exercises help maintain bone density",
+        "❤️ Regular exercise keeps your heart healthy and strong"
+      ]
+    };
+
+    const weightTips = {
+      underweight: [
+        "📈 Focus on caloric surplus with clean, nutrient-dense foods",
+        "🥜 Add healthy calorie-dense foods like nuts, avocados, and olive oil",
+        "🍚 Don't skip carbs - they're essential for gaining healthy weight"
+      ],
+      overweight: [
+        "🎯 Focus on lean protein sources to preserve muscle while losing fat",
+        "📉 Create a moderate calorie deficit - crash diets don't work long-term",
+        "🏋️ Strength training helps prevent muscle loss during weight loss"
+      ]
+    };
+
+    // Get goal-specific tips
+    const goalKey = goal?.toLowerCase() || 'general fitness';
+    const goalTips = allTips[goalKey] || allTips['general fitness'];
     
-    if (goal?.toLowerCase() === 'fat loss') {
-      tips.push("🔥 Focus on high-protein, low-calorie foods like chicken breast, fish, and egg whites");
-      tips.push("💧 Drink at least 3-4 liters of water daily to boost metabolism");
-      tips.push("🥗 Fill half your plate with vegetables for fiber and fullness");
-      tips.push("⏰ Try intermittent fasting - eat within an 8-hour window");
-      if (age && age > 40) {
-        tips.push("🚶 Include 30 minutes of walking daily - gentle on joints, great for fat burn");
-      } else {
-        tips.push("🏃 Include HIIT cardio 3-4 times per week for maximum fat burning");
-      }
-    } else if (goal?.toLowerCase() === 'muscle') {
-      tips.push("💪 Eat protein within 30 minutes after your workout for best results");
-      tips.push("🍚 Don't skip carbs! They fuel your workouts and muscle growth");
-      tips.push("🥚 Include a protein source in every meal (eggs, chicken, fish, paneer)");
-      tips.push("😴 Get 7-8 hours of sleep - muscles grow during rest!");
-      if (weightNum < 60) {
-        tips.push("📈 You're on the lighter side - focus on caloric surplus with clean foods");
-      } else if (weightNum > 90) {
-        tips.push("🎯 Focus on lean protein sources to build muscle without excess fat");
-      }
-    } else {
-      tips.push("🏃 Aim for 150 minutes of moderate exercise per week");
-      tips.push("🥗 Eat a balanced diet with all food groups");
-      tips.push("💧 Stay hydrated - drink 2-3 liters of water daily");
-      tips.push("🍎 Include fruits and vegetables in every meal");
-    }
-
-    // Age-specific tips
+    // Get age-specific tips
+    let ageTips = [];
     if (age) {
-      if (age < 20) {
-        tips.push("🌱 Your body is still growing - never skip meals!");
-      } else if (age >= 20 && age < 30) {
-        tips.push("⚡ This is your prime time - push hard and build good habits!");
-      } else if (age >= 30 && age < 45) {
-        tips.push("🎯 Focus on consistency over intensity - sustainable habits win!");
-      } else if (age >= 45) {
-        tips.push("🧘 Include flexibility exercises and prioritize recovery");
-      }
+      if (age < 20) ageTips = ageSpecificTips.young;
+      else if (age < 30) ageTips = ageSpecificTips.prime;
+      else if (age < 45) ageTips = ageSpecificTips.experienced;
+      else ageTips = ageSpecificTips.wise;
     }
 
-    return tips;
+    // Get weight-specific tips
+    let weightTipsList = [];
+    if (weightNum) {
+      if (weightNum < 55) weightTipsList = weightTips.underweight;
+      else if (weightNum > 85) weightTipsList = weightTips.overweight;
+    }
+
+    // Combine all tips
+    const allAvailableTips = [...goalTips, ...ageTips, ...weightTipsList];
+    
+    // Shuffle based on day of year so tips change daily but are consistent throughout the day
+    const shuffled = allAvailableTips.sort((a, b) => {
+      const hashA = (a.charCodeAt(0) + dayOfYear) % allAvailableTips.length;
+      const hashB = (b.charCodeAt(0) + dayOfYear) % allAvailableTips.length;
+      return hashA - hashB;
+    });
+
+    // Return top 4 tips for today
+    return shuffled.slice(0, 4);
   };
 
   const trainerTips = getTrainerTips();
@@ -685,15 +772,39 @@ function Dashboard({ goal, weight, dob, username }) {
       {/* Dashboard Header */}
       <div className="dashboard-header">
         <div className="welcome-section">
-          <h1>Welcome, <span>{username || 'Champion'}!</span></h1>
-          <p>Track your meals and crush your fitness goals today</p>
+          <h1>Welcome back, <span>{username || 'Champion'}!</span></h1>
+          <p>Ready to crush your fitness goals today? Let's track your nutrition.</p>
         </div>
         {goal && (
           <div className="goal-badge">
             <span className="goal-badge-icon">{getGoalIcon()}</span>
-            Goal: {goal.charAt(0).toUpperCase() + goal.slice(1)}
+            {goal.charAt(0).toUpperCase() + goal.slice(1)}
           </div>
         )}
+      </div>
+
+      {/* Quick Stats Overview */}
+      <div className="stats-grid">
+        <div className="stat-card">
+          <div className="stat-icon">🎯</div>
+          <div className="stat-value">{proteinGoal.recommended}g</div>
+          <div className="stat-label">Protein Goal</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon">📊</div>
+          <div className="stat-value">{results ? results.reduce((acc, r) => acc + r.protein, 0).toFixed(0) : '0'}g</div>
+          <div className="stat-label">Consumed</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon">🍽️</div>
+          <div className="stat-value">{morningFoods.filter(f => f.trim()).length + eveningFoods.filter(f => f.trim()).length + postEveningFoods.filter(f => f.trim()).length + nightFoods.filter(f => f.trim()).length}</div>
+          <div className="stat-label">Foods Logged</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon">⚡</div>
+          <div className="stat-value">{results ? Math.round((results.reduce((acc, r) => acc + r.protein, 0) / proteinGoal.recommended) * 100) : 0}%</div>
+          <div className="stat-label">Progress</div>
+        </div>
       </div>
 
       {/* Personal Trainer Card */}
@@ -702,7 +813,7 @@ function Dashboard({ goal, weight, dob, username }) {
           <div className="trainer-avatar">🏋️</div>
           <div>
             <h3 className="trainer-title">Your Personal Trainer</h3>
-            <p className="trainer-subtitle">Personalized recommendations based on your profile</p>
+            <p className="trainer-subtitle">Personalized insights based on your profile</p>
           </div>
         </div>
 
@@ -736,7 +847,7 @@ function Dashboard({ goal, weight, dob, username }) {
           <div className="protein-goal-card">
             <div className="protein-goal-header">
               <span className="protein-goal-icon">🎯</span>
-              <h4>Today's Protein Goal</h4>
+              <h4>Today's Protein Target</h4>
             </div>
             <div className="protein-goal-value">
               <span className="protein-main">{proteinGoal.recommended}g</span>
@@ -754,10 +865,10 @@ function Dashboard({ goal, weight, dob, username }) {
               {results ? (
                 <>
                   You've consumed <strong>{results.reduce((acc, r) => acc + r.protein, 0).toFixed(1)}g</strong> protein 
-                  ({Math.round((results.reduce((acc, r) => acc + r.protein, 0) / proteinGoal.recommended) * 100)}% of goal)
+                  ({Math.round((results.reduce((acc, r) => acc + r.protein, 0) / proteinGoal.recommended) * 100)}% of daily goal)
                 </>
               ) : (
-                'Log your meals to track protein intake'
+                'Start logging your meals to track protein intake'
               )}
             </p>
           </div>
@@ -765,12 +876,16 @@ function Dashboard({ goal, weight, dob, username }) {
 
         {/* Trainer Tips */}
         <div className="trainer-tips">
-          <h4><span>💡</span> Daily Tips for You</h4>
+          <div className="tips-header">
+            <h4><span>💡</span> Today's Tips for You</h4>
+            <span className="tips-date">🔄 {today.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</span>
+          </div>
           <ul className="tips-list">
-            {trainerTips.slice(0, 4).map((tip, idx) => (
+            {trainerTips.map((tip, idx) => (
               <li key={idx} className="tip-item">{tip}</li>
             ))}
           </ul>
+          <p className="tips-refresh-note">✨ New personalized tips every day!</p>
         </div>
       </div>
 
@@ -778,30 +893,6 @@ function Dashboard({ goal, weight, dob, username }) {
       <div className="quote-card">
         <p className="quote-text">{randomQuote.text}</p>
         <p className="quote-author">— {randomQuote.author}</p>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-icon">🍽️</div>
-          <div className="stat-value">{morningFoods.filter(f => f.trim()).length + eveningFoods.filter(f => f.trim()).length + postEveningFoods.filter(f => f.trim()).length + nightFoods.filter(f => f.trim()).length}</div>
-          <div className="stat-label">Foods Logged</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">🥗</div>
-          <div className="stat-value">4</div>
-          <div className="stat-label">Meals Tracked</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">📊</div>
-          <div className="stat-value">{results ? results.reduce((acc, r) => acc + r.protein, 0).toFixed(0) : '0'}g</div>
-          <div className="stat-label">Total Protein</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">⚡</div>
-          <div className="stat-value">{results ? results.reduce((acc, r) => acc + r.carbs, 0).toFixed(0) : '0'}g</div>
-          <div className="stat-label">Total Carbs</div>
-        </div>
       </div>
 
       {/* Food Tracker Section */}
