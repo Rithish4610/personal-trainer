@@ -7,21 +7,36 @@ import './styles.css';
 function App() {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
   const [goal, setGoal] = useState(localStorage.getItem('goal') || '');
+  const [weight, setWeight] = useState(localStorage.getItem('weight') || '');
+  const [dob, setDob] = useState(localStorage.getItem('dob') || '');
+  const [username, setUsername] = useState(localStorage.getItem('username') || '');
   const [showSignup, setShowSignup] = useState(false);
   const [signupSuccess, setSignupSuccess] = useState(false);
 
-  const handleLogin = (token, goal) => {
+  const handleLogin = (token, goal, weight, dob, username) => {
     setToken(token);
     setGoal(goal);
+    setWeight(weight);
+    setDob(dob);
+    setUsername(username);
     localStorage.setItem('token', token);
     localStorage.setItem('goal', goal);
+    localStorage.setItem('weight', weight);
+    localStorage.setItem('dob', dob);
+    localStorage.setItem('username', username);
   };
 
   const handleLogout = () => {
     setToken('');
     setGoal('');
+    setWeight('');
+    setDob('');
+    setUsername('');
     localStorage.removeItem('token');
     localStorage.removeItem('goal');
+    localStorage.removeItem('weight');
+    localStorage.removeItem('dob');
+    localStorage.removeItem('username');
   };
 
   const handleSignup = () => {
@@ -121,7 +136,7 @@ function App() {
 
       {/* Main Dashboard */}
       <main className="main-content">
-        <Dashboard goal={goal} />
+        <Dashboard goal={goal} weight={weight} dob={dob} username={username} />
       </main>
     </div>
   );

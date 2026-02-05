@@ -119,11 +119,11 @@ function Signup({ onSignup }) {
                 className="form-input"
                 value={dob} 
                 onChange={e => setDob(e.target.value)} 
-                max={new Date().toISOString().split('T')[0]}
+                max={new Date(new Date().setFullYear(new Date().getFullYear() - 13)).toISOString().split('T')[0]}
                 required 
               />
               <small style={{ color: '#636e72', fontSize: '12px', marginTop: '5px', display: 'block' }}>
-                🎂 Helps us calculate your daily calorie needs
+                🎂 You must be at least 13 years old to sign up
               </small>
             </div>
 

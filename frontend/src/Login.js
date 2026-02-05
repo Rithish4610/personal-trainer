@@ -13,7 +13,7 @@ function Login({ onLogin }) {
     setLoading(true);
     try {
       const res = await axios.post('http://localhost:4000/api/login', { username, password });
-      onLogin(res.data.token, res.data.goal);
+      onLogin(res.data.token, res.data.goal, res.data.weight, res.data.dob, res.data.username);
     } catch (err) {
       setError('Invalid credentials. Please try again.');
     } finally {

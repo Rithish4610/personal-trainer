@@ -3,12 +3,98 @@
 import React, { useState } from 'react';
 import FoodResultsDashboard from './FoodResultsDashboard';
 
-function Dashboard({ goal }) {
+function Dashboard({ goal, weight, dob, username }) {
   const [morningFoods, setMorningFoods] = useState(['']);
   const [eveningFoods, setEveningFoods] = useState(['']);
   const [postEveningFoods, setPostEveningFoods] = useState(['']);
   const [nightFoods, setNightFoods] = useState(['']);
   const [results, setResults] = useState(null);
+
+  // Calculate age from DOB
+  const calculateAge = (dobString) => {
+    if (!dobString) return null;
+    const birthDate = new Date(dobString);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
+  const age = calculateAge(dob);
+  const weightNum = parseFloat(weight) || 0;
+
+  // Calculate protein goal based on goal type and weight
+  const getProteinGoal = () => {
+    if (!weightNum) return { min: 0, max: 0, recommended: 0 };
+    
+    switch(goal?.toLowerCase()) {
+      case 'fat loss':
+        // Higher protein for fat loss: 1.6-2.2g per kg
+        return { min: Math.round(weightNum * 1.6), max: Math.round(weightNum * 2.2), recommended: Math.round(weightNum * 1.8) };
+      case 'muscle':
+        // Highest protein for muscle building: 1.8-2.4g per kg
+        return { min: Math.round(weightNum * 1.8), max: Math.round(weightNum * 2.4), recommended: Math.round(weightNum * 2.0) };
+      case 'general fitness':
+        // Moderate protein: 1.2-1.6g per kg
+        return { min: Math.round(weightNum * 1.2), max: Math.round(weightNum * 1.6), recommended: Math.round(weightNum * 1.4) };
+      default:
+        return { min: Math.round(weightNum * 1.2), max: Math.round(weightNum * 1.8), recommended: Math.round(weightNum * 1.5) };
+    }
+  };
+
+  const proteinGoal = getProteinGoal();
+
+  // Get personalized trainer tips based on goal, age, and weight
+  const getTrainerTips = () => {
+    const tips = [];
+    
+    if (goal?.toLowerCase() === 'fat loss') {
+      tips.push("🔥 Focus on high-protein, low-calorie foods like chicken breast, fish, and egg whites");
+      tips.push("💧 Drink at least 3-4 liters of water daily to boost metabolism");
+      tips.push("🥗 Fill half your plate with vegetables for fiber and fullness");
+      tips.push("⏰ Try intermittent fasting - eat within an 8-hour window");
+      if (age && age > 40) {
+        tips.push("🚶 Include 30 minutes of walking daily - gentle on joints, great for fat burn");
+      } else {
+        tips.push("🏃 Include HIIT cardio 3-4 times per week for maximum fat burning");
+      }
+    } else if (goal?.toLowerCase() === 'muscle') {
+      tips.push("💪 Eat protein within 30 minutes after your workout for best results");
+      tips.push("🍚 Don't skip carbs! They fuel your workouts and muscle growth");
+      tips.push("🥚 Include a protein source in every meal (eggs, chicken, fish, paneer)");
+      tips.push("😴 Get 7-8 hours of sleep - muscles grow during rest!");
+      if (weightNum < 60) {
+        tips.push("📈 You're on the lighter side - focus on caloric surplus with clean foods");
+      } else if (weightNum > 90) {
+        tips.push("🎯 Focus on lean protein sources to build muscle without excess fat");
+      }
+    } else {
+      tips.push("🏃 Aim for 150 minutes of moderate exercise per week");
+      tips.push("🥗 Eat a balanced diet with all food groups");
+      tips.push("💧 Stay hydrated - drink 2-3 liters of water daily");
+      tips.push("🍎 Include fruits and vegetables in every meal");
+    }
+
+    // Age-specific tips
+    if (age) {
+      if (age < 20) {
+        tips.push("🌱 Your body is still growing - never skip meals!");
+      } else if (age >= 20 && age < 30) {
+        tips.push("⚡ This is your prime time - push hard and build good habits!");
+      } else if (age >= 30 && age < 45) {
+        tips.push("🎯 Focus on consistency over intensity - sustainable habits win!");
+      } else if (age >= 45) {
+        tips.push("🧘 Include flexibility exercises and prioritize recovery");
+      }
+    }
+
+    return tips;
+  };
+
+  const trainerTips = getTrainerTips();
 
   // Nutrition values per unit (protein, carbs, fiber, fat per 100g or per piece/ml as noted)
   // All gram-based values are per gram for easy calculation
@@ -599,7 +685,7 @@ function Dashboard({ goal }) {
       {/* Dashboard Header */}
       <div className="dashboard-header">
         <div className="welcome-section">
-          <h1>Welcome, <span>Champion!</span></h1>
+          <h1>Welcome, <span>{username || 'Champion'}!</span></h1>
           <p>Track your meals and crush your fitness goals today</p>
         </div>
         {goal && (
@@ -608,6 +694,84 @@ function Dashboard({ goal }) {
             Goal: {goal.charAt(0).toUpperCase() + goal.slice(1)}
           </div>
         )}
+      </div>
+
+      {/* Personal Trainer Card */}
+      <div className="trainer-card">
+        <div className="trainer-header">
+          <div className="trainer-avatar">🏋️</div>
+          <div>
+            <h3 className="trainer-title">Your Personal Trainer</h3>
+            <p className="trainer-subtitle">Personalized recommendations based on your profile</p>
+          </div>
+        </div>
+
+        {/* User Stats */}
+        <div className="user-stats">
+          {weightNum > 0 && (
+            <div className="user-stat-item">
+              <span className="user-stat-icon">⚖️</span>
+              <span className="user-stat-value">{weightNum} kg</span>
+              <span className="user-stat-label">Weight</span>
+            </div>
+          )}
+          {age && (
+            <div className="user-stat-item">
+              <span className="user-stat-icon">🎂</span>
+              <span className="user-stat-value">{age} yrs</span>
+              <span className="user-stat-label">Age</span>
+            </div>
+          )}
+          {goal && (
+            <div className="user-stat-item">
+              <span className="user-stat-icon">{getGoalIcon()}</span>
+              <span className="user-stat-value">{goal.charAt(0).toUpperCase() + goal.slice(1)}</span>
+              <span className="user-stat-label">Goal</span>
+            </div>
+          )}
+        </div>
+
+        {/* Protein Goal */}
+        {proteinGoal.recommended > 0 && (
+          <div className="protein-goal-card">
+            <div className="protein-goal-header">
+              <span className="protein-goal-icon">🎯</span>
+              <h4>Today's Protein Goal</h4>
+            </div>
+            <div className="protein-goal-value">
+              <span className="protein-main">{proteinGoal.recommended}g</span>
+              <span className="protein-range">Range: {proteinGoal.min}g - {proteinGoal.max}g</span>
+            </div>
+            <div className="protein-progress-bar">
+              <div 
+                className="protein-progress-fill"
+                style={{ 
+                  width: `${Math.min((results ? results.reduce((acc, r) => acc + r.protein, 0) : 0) / proteinGoal.recommended * 100, 100)}%` 
+                }}
+              ></div>
+            </div>
+            <p className="protein-status">
+              {results ? (
+                <>
+                  You've consumed <strong>{results.reduce((acc, r) => acc + r.protein, 0).toFixed(1)}g</strong> protein 
+                  ({Math.round((results.reduce((acc, r) => acc + r.protein, 0) / proteinGoal.recommended) * 100)}% of goal)
+                </>
+              ) : (
+                'Log your meals to track protein intake'
+              )}
+            </p>
+          </div>
+        )}
+
+        {/* Trainer Tips */}
+        <div className="trainer-tips">
+          <h4><span>💡</span> Daily Tips for You</h4>
+          <ul className="tips-list">
+            {trainerTips.slice(0, 4).map((tip, idx) => (
+              <li key={idx} className="tip-item">{tip}</li>
+            ))}
+          </ul>
+        </div>
       </div>
 
       {/* Motivational Quote */}
