@@ -752,7 +752,23 @@ function Dashboard({ goal, weight, dob, username }) {
     { text: "The only bad workout is the one that didn't happen.", author: "Rithi" },
     { text: "Take care of your body. It's the only place you have to live.", author: "Rithi" },
     { text: "Fitness is not about being better than someone else. It's about being better than you used to be.", author: "Rithi" },
-    { text: "Your body can stand almost anything. It's your mind that you have to convince.", author: "Rithi" }
+    { text: "Your body can stand almost anything. It's your mind that you have to convince.", author: "Rithi" },
+    { text: "Success isn't always about greatness. It's about consistency.", author: "Rithi" },
+    { text: "The pain you feel today will be the strength you feel tomorrow.", author: "Rithi" },
+    { text: "Don't wish for a good body, work for it.", author: "Rithi" },
+    { text: "Your health is an investment, not an expense.", author: "Rithi" },
+    { text: "Sweat is just fat crying.", author: "Rithi" },
+    { text: "The hardest lift of all is lifting your butt off the couch.", author: "Rithi" },
+    { text: "Eat clean, train dirty.", author: "Rithi" },
+    { text: "Sore today, strong tomorrow.", author: "Rithi" },
+    { text: "If it doesn't challenge you, it won't change you.", author: "Rithi" },
+    { text: "Champions are made when no one is watching.", author: "Rithi" },
+    { text: "The body achieves what the mind believes.", author: "Rithi" },
+    { text: "Discipline is choosing between what you want now and what you want most.", author: "Rithi" },
+    { text: "No excuses, just results.", author: "Rithi" },
+    { text: "The only way to finish is to start.", author: "Rithi" },
+    { text: "Be stronger than your excuses.", author: "Rithi" },
+    { text: "Progress, not perfection.", author: "Rithi" }
   ];
   
   const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
