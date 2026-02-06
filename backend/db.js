@@ -518,6 +518,155 @@ db.serialize(() => {
     );
   });
 
+  // Insert nuts and seeds with nutritional data (per 100g)
+  const nuts = [
+    // Tree Nuts
+    ['Almonds', 21.2, 21.7, 12.5, 49.9, '100g'],
+    ['Almonds (Blanched)', 21.4, 18.7, 9.9, 52.5, '100g'],
+    ['Almonds (Roasted)', 21.0, 21.0, 12.0, 52.5, '100g'],
+    ['Almonds (Sliced)', 21.2, 21.7, 12.5, 49.9, '100g'],
+    ['Almonds (Slivered)', 21.2, 21.7, 12.5, 49.9, '100g'],
+    ['Almond Butter', 21.0, 18.8, 10.3, 55.5, '100g'],
+    
+    ['Walnuts', 15.2, 13.7, 6.7, 65.2, '100g'],
+    ['Walnuts (Black)', 24.1, 9.9, 6.8, 59.0, '100g'],
+    ['Walnut Butter', 15.0, 14.0, 6.0, 64.0, '100g'],
+    
+    ['Cashews', 18.2, 30.2, 3.3, 43.9, '100g'],
+    ['Cashews (Roasted)', 15.3, 32.7, 3.0, 46.4, '100g'],
+    ['Cashew Butter', 17.6, 27.6, 2.0, 49.4, '100g'],
+    
+    ['Pecans', 9.2, 13.9, 9.6, 72.0, '100g'],
+    ['Pecans (Roasted)', 9.5, 14.3, 9.4, 74.3, '100g'],
+    ['Pecan Butter', 9.0, 14.0, 9.5, 71.0, '100g'],
+    
+    ['Pistachios', 20.2, 27.2, 10.6, 45.3, '100g'],
+    ['Pistachios (Roasted)', 20.6, 28.0, 10.3, 45.8, '100g'],
+    ['Pistachio Butter', 20.0, 27.0, 10.0, 45.0, '100g'],
+    
+    ['Hazelnuts', 15.0, 16.7, 9.7, 60.8, '100g'],
+    ['Hazelnuts (Roasted)', 15.3, 17.6, 9.4, 62.4, '100g'],
+    ['Hazelnut Butter', 15.0, 17.0, 9.0, 61.0, '100g'],
+    
+    ['Macadamia Nuts', 7.9, 13.8, 8.6, 75.8, '100g'],
+    ['Macadamia Nuts (Roasted)', 7.8, 13.4, 8.0, 76.1, '100g'],
+    ['Macadamia Butter', 8.0, 14.0, 8.5, 75.0, '100g'],
+    
+    ['Brazil Nuts', 14.3, 12.3, 7.5, 66.4, '100g'],
+    
+    ['Pine Nuts', 13.7, 13.1, 3.7, 68.4, '100g'],
+    ['Pine Nuts (Roasted)', 14.0, 13.5, 3.5, 69.0, '100g'],
+    
+    ['Chestnuts', 2.4, 44.2, 5.1, 2.3, '100g'],
+    ['Chestnuts (Roasted)', 3.2, 49.1, 5.1, 2.2, '100g'],
+    
+    ['Horse Chestnuts', 6.0, 41.0, 6.8, 1.6, '100g'],
+    
+    ['Marcona Almonds', 22.0, 16.0, 11.0, 55.0, '100g'],
+    
+    // Coconut Products
+    ['Coconut (Shredded)', 5.6, 23.7, 16.3, 64.5, '100g'],
+    ['Coconut (Dried)', 6.9, 23.7, 16.3, 64.5, '100g'],
+    ['Coconut (Desiccated)', 6.9, 23.7, 16.3, 64.5, '100g'],
+    ['Coconut Cream', 2.2, 6.6, 2.2, 19.0, '100g'],
+    ['Coconut Milk', 2.3, 5.5, 2.2, 23.8, '100g'],
+    ['Coconut Oil', 0, 0, 0, 100, '100g'],
+    ['Coconut Butter', 6.1, 21.5, 12.1, 62.3, '100g'],
+    
+    // Seeds
+    ['Sunflower Seeds', 20.8, 20.0, 8.6, 51.5, '100g'],
+    ['Sunflower Seeds (Roasted)', 19.3, 24.1, 11.1, 49.8, '100g'],
+    ['Sunflower Seed Butter', 17.3, 18.8, 5.5, 54.0, '100g'],
+    
+    ['Pumpkin Seeds', 30.2, 10.7, 6.0, 49.1, '100g'],
+    ['Pumpkin Seeds (Roasted)', 29.8, 14.7, 6.5, 49.0, '100g'],
+    
+    ['Chia Seeds', 16.5, 42.1, 34.4, 30.7, '100g'],
+    
+    ['Flax Seeds', 18.3, 28.9, 27.3, 42.2, '100g'],
+    ['Flax Seeds (Ground)', 18.3, 28.9, 27.3, 42.2, '100g'],
+    
+    ['Hemp Seeds', 31.6, 8.7, 4.0, 48.8, '100g'],
+    ['Hemp Hearts', 31.6, 8.7, 4.0, 48.8, '100g'],
+    
+    ['Sesame Seeds', 17.7, 23.5, 11.8, 49.7, '100g'],
+    ['Sesame Seeds (Black)', 18.0, 23.0, 12.0, 50.0, '100g'],
+    ['Tahini', 17.0, 21.2, 9.3, 53.8, '100g'],
+    
+    ['Poppy Seeds', 17.9, 28.1, 19.5, 41.6, '100g'],
+    
+    ['Caraway Seeds', 19.8, 49.9, 38.0, 14.6, '100g'],
+    
+    ['Fennel Seeds', 15.8, 52.3, 39.8, 14.9, '100g'],
+    
+    ['Cumin Seeds', 17.8, 44.2, 10.5, 22.3, '100g'],
+    
+    ['Coriander Seeds', 12.4, 55.0, 41.9, 17.8, '100g'],
+    
+    ['Mustard Seeds', 26.1, 28.1, 12.2, 36.2, '100g'],
+    
+    ['Fenugreek Seeds', 23.0, 58.4, 24.6, 6.4, '100g'],
+    
+    ['Sacha Inchi Seeds', 27.0, 35.0, 11.0, 35.0, '100g'],
+    
+    ['Watermelon Seeds', 28.3, 15.3, 0.9, 47.4, '100g'],
+    
+    ['Lotus Seeds', 15.4, 64.5, 14.5, 1.9, '100g'],
+    
+    // Mixed & Specialty
+    ['Mixed Nuts', 17.0, 21.0, 7.0, 56.0, '100g'],
+    ['Mixed Nuts (Roasted)', 17.5, 22.0, 7.5, 57.0, '100g'],
+    ['Trail Mix', 12.8, 44.8, 4.6, 29.0, '100g'],
+    ['Trail Mix (Tropical)', 10.0, 52.5, 4.0, 23.5, '100g'],
+    
+    ['Tiger Nuts', 4.5, 43.3, 33.0, 25.0, '100g'],
+    
+    ['Acorn Nuts', 6.2, 40.8, 9.1, 24.0, '100g'],
+    
+    ['Baru Nuts', 23.9, 15.8, 13.4, 38.2, '100g'],
+    
+    ['Candle Nuts', 19.0, 8.0, 3.5, 79.0, '100g'],
+    
+    ['Kola Nuts', 7.0, 45.0, 4.0, 0.3, '100g'],
+    
+    ['Betel Nuts', 4.9, 47.2, 10.0, 4.4, '100g'],
+    
+    ['Ginkgo Nuts', 4.3, 37.6, 1.0, 1.7, '100g'],
+    
+    ['Paradise Nuts', 14.0, 8.0, 5.0, 67.0, '100g'],
+    
+    ['Mongongo Nuts', 27.0, 24.0, 5.0, 57.0, '100g'],
+    
+    ['Pili Nuts', 10.8, 4.0, 1.0, 79.6, '100g'],
+    
+    ['Hickory Nuts', 12.7, 18.3, 6.4, 64.4, '100g'],
+    
+    ['Butternuts', 24.9, 12.1, 4.7, 57.0, '100g'],
+    
+    ['Beechnuts', 6.2, 33.5, 5.0, 50.0, '100g'],
+    
+    ['Shea Nuts', 8.0, 42.0, 5.0, 45.0, '100g'],
+    
+    // Nut-Based Products
+    ['Almond Milk', 0.4, 0.3, 0.2, 1.1, '100g'],
+    ['Cashew Milk', 0.4, 1.0, 0, 1.0, '100g'],
+    ['Hazelnut Milk', 0.4, 3.2, 0.1, 1.6, '100g'],
+    ['Walnut Milk', 0.4, 1.0, 0.1, 1.5, '100g'],
+    ['Macadamia Milk', 0.2, 0.5, 0, 3.0, '100g'],
+    
+    ['Nut Brittle', 6.0, 72.0, 2.0, 18.0, '100g'],
+    ['Praline', 5.0, 59.0, 2.5, 24.0, '100g'],
+    ['Marzipan', 6.0, 49.0, 4.0, 27.0, '100g'],
+    ['Nougat', 4.0, 75.0, 1.5, 9.0, '100g']
+  ];
+
+  nuts.forEach(item => {
+    db.run(
+      `INSERT OR IGNORE INTO foods (name, protein, carbs, fiber, fat, unit) VALUES (?, ?, ?, ?, ?, ?)`,
+      item
+    );
+  });
+
   db.run(`CREATE TABLE IF NOT EXISTS entries (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER,
