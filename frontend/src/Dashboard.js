@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import FoodResultsDashboard from './FoodResultsDashboard';
 
-function Dashboard({ goal, weight, dob, username }) {
+function Dashboard({ goal, weight, dob, username, onLogout }) {
   const [morningFoods, setMorningFoods] = useState(['']);
   const [eveningFoods, setEveningFoods] = useState(['']);
   const [postEveningFoods, setPostEveningFoods] = useState(['']);
@@ -842,6 +842,9 @@ function Dashboard({ goal, weight, dob, username }) {
                   </div>
                 </div>
               </div>
+              <button className="profile-logout-btn" onClick={onLogout}>
+                <span>🚪</span> Logout
+              </button>
             </div>
           </div>
         </div>

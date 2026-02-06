@@ -129,14 +129,11 @@ function App() {
             <div className="logo-tagline">Your Personal Trainer</div>
           </div>
         </div>
-        <button className="btn btn-danger" onClick={handleLogout}>
-          <span>🚪</span> Logout
-        </button>
       </header>
 
       {/* Main Dashboard */}
       <main className="main-content">
-        <Dashboard goal={goal} weight={weight} dob={dob} username={username} />
+        <Dashboard goal={goal} weight={weight} dob={dob} username={username} onLogout={handleLogout} />
       </main>
     </div>
   );
