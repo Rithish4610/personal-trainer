@@ -1,7 +1,180 @@
 
 
-import React, { useState } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import FoodResultsDashboard from './FoodResultsDashboard';
+
+// FoodInput component moved outside Dashboard to prevent re-creation on each render
+const FoodInput = memo(({ value, onChange, onRemove, placeholder, showRemove, getSuggestions, isValidFoodEntry }) => {
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const suggestions = getSuggestions(value);
+
+  const handleSelect = (suggestion) => {
+    onChange(suggestion);
+    setShowSuggestions(false);
+  };
+
+  const isValid = isValidFoodEntry(value);
+
+  return (
+    <div className="food-input-wrapper">
+      <div style={{ position: 'relative', flex: 1 }}>
+        <input
+          type="text"
+          className="food-input"
+          placeholder={placeholder}
+          value={value}
+          onChange={e => {
+            onChange(e.target.value);
+            setShowSuggestions(true);
+          }}
+          onFocus={() => setShowSuggestions(true)}
+          onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+          style={{
+            borderColor: value && isValid ? '#00d4aa' : value ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.1)',
+            width: '100%'
+          }}
+        />
+        {value && isValid && (
+          <span style={{
+            position: 'absolute',
+            right: '15px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            color: '#00d4aa',
+            fontSize: '18px'
+          }}>✓</span>
+        )}
+        {showSuggestions && suggestions.length > 0 && (
+          <div className="suggestions-dropdown">
+            {suggestions.map((s, idx) => (
+              <div
+                key={idx}
+                className="suggestion-item"
+                onMouseDown={() => handleSelect(s)}
+              >
+                <span className="suggestion-icon">🍽️</span>
+                <span>{s}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      {showRemove && (
+        <button onClick={onRemove} className="btn-remove">
+          ✕
+        </button>
+      )}
+    </div>
+  );
+});
+
+// MealSection component moved outside Dashboard
+const MealSection = memo(({ label, foods, setFoods, placeholder, mealClass, icon, time, getSuggestions, isValidFoodEntry, calculateMeal }) => {
+  const [mealResults, setMealResults] = useState(null);
+
+  const addFood = () => {
+    setFoods([...foods, '']);
+  };
+
+  const updateFood = (index, value) => {
+    const newFoods = [...foods];
+    newFoods[index] = value;
+    setFoods(newFoods);
+    setMealResults(null);
+  };
+
+  const removeFood = (index) => {
+    const newFoods = foods.filter((_, i) => i !== index);
+    setFoods(newFoods.length > 0 ? newFoods : ['']);
+    setMealResults(null);
+  };
+
+  const handleCalculateMeal = () => {
+    const results = calculateMeal(label, foods);
+    setMealResults(results);
+  };
+
+  const hasValidFoods = foods.some(f => isValidFoodEntry(f));
+
+  const totals = mealResults ? mealResults.reduce((acc, item) => ({
+    protein: acc.protein + item.protein,
+    carbs: acc.carbs + item.carbs,
+    fiber: acc.fiber + item.fiber,
+    fat: acc.fat + item.fat
+  }), { protein: 0, carbs: 0, fiber: 0, fat: 0 }) : null;
+
+  return (
+    <div className={`meal-card ${mealClass || ''}`}>
+      <div className="meal-card-header">
+        <div className="meal-icon">{icon || '🍽️'}</div>
+        <div>
+          <h4 className="meal-title">{label}</h4>
+          <span className="meal-time">{time || ''}</span>
+        </div>
+      </div>
+      
+      {foods.map((food, index) => (
+        <FoodInput
+          key={`${label}-${index}`}
+          value={food}
+          onChange={(value) => updateFood(index, value)}
+          onRemove={() => removeFood(index)}
+          placeholder={placeholder}
+          showRemove={foods.length > 1}
+          getSuggestions={getSuggestions}
+          isValidFoodEntry={isValidFoodEntry}
+        />
+      ))}
+      
+      <div className="meal-actions">
+        <button onClick={addFood} className="btn-add-food">
+          <span>➕</span> Add Food
+        </button>
+        {hasValidFoods && (
+          <button onClick={handleCalculateMeal} className="btn-calculate">
+            <span>📊</span> Calculate {label}
+          </button>
+        )}
+      </div>
+
+      {mealResults && mealResults.length > 0 && (
+        <div className="results-container">
+          <table className="results-table">
+            <thead>
+              <tr>
+                <th>Food</th>
+                <th style={{ textAlign: 'right' }}>Protein</th>
+                <th style={{ textAlign: 'right' }}>Carbs</th>
+                <th style={{ textAlign: 'right' }}>Fiber</th>
+                <th style={{ textAlign: 'right' }}>Fat</th>
+              </tr>
+            </thead>
+            <tbody>
+              {mealResults.map((item, idx) => (
+                <tr key={idx}>
+                  <td>{item.food}</td>
+                  <td style={{ textAlign: 'right' }}>{item.protein}g</td>
+                  <td style={{ textAlign: 'right' }}>{item.carbs}g</td>
+                  <td style={{ textAlign: 'right' }}>{item.fiber}g</td>
+                  <td style={{ textAlign: 'right' }}>{item.fat}g</td>
+                </tr>
+              ))}
+              {mealResults.length > 1 && (
+                <tr className="results-total">
+                  <td><strong>Total</strong></td>
+                  <td style={{ textAlign: 'right' }}><strong>{totals.protein.toFixed(2)}g</strong></td>
+                  <td style={{ textAlign: 'right' }}><strong>{totals.carbs.toFixed(2)}g</strong></td>
+                  <td style={{ textAlign: 'right' }}><strong>{totals.fiber.toFixed(2)}g</strong></td>
+                  <td style={{ textAlign: 'right' }}><strong>{totals.fat.toFixed(2)}g</strong></td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+});
 
 function Dashboard({ goal, weight, dob, username, onLogout }) {
   const [morningFoods, setMorningFoods] = useState(['']);
@@ -522,81 +695,8 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
   // Get list of all food names for autocomplete
   const foodNames = Object.keys(foodData);
 
-  // Filter suggestions based on input
-  const getSuggestions = (input) => {
-    if (!input) return [];
-    const inputLower = input.toLowerCase();
-    return foodNames.filter(name => name.toLowerCase().includes(inputLower)).slice(0, 8);
-  };
-
-  // Autocomplete input component for a single food item
-  const FoodInput = ({ value, onChange, onRemove, placeholder, showRemove }) => {
-    const [showSuggestions, setShowSuggestions] = useState(false);
-    const suggestions = getSuggestions(value);
-
-    const handleSelect = (suggestion) => {
-      onChange(suggestion);
-      setShowSuggestions(false);
-    };
-
-    const isValid = isValidFoodEntry(value);
-
-    return (
-      <div className="food-input-wrapper">
-        <div style={{ position: 'relative', flex: 1 }}>
-          <input
-            type="text"
-            className="food-input"
-            placeholder={placeholder}
-            value={value}
-            onChange={e => {
-              onChange(e.target.value);
-              setShowSuggestions(true);
-            }}
-            onFocus={() => setShowSuggestions(true)}
-            onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
-            style={{
-              borderColor: value && isValid ? '#00d4aa' : value ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.1)',
-              width: '100%'
-            }}
-          />
-          {value && isValid && (
-            <span style={{
-              position: 'absolute',
-              right: '15px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              color: '#00d4aa',
-              fontSize: '18px'
-            }}>✓</span>
-          )}
-          {showSuggestions && suggestions.length > 0 && (
-            <div className="suggestions-dropdown">
-              {suggestions.map((s, idx) => (
-                <div
-                  key={idx}
-                  className="suggestion-item"
-                  onMouseDown={() => handleSelect(s)}
-                >
-                  <span className="suggestion-icon">🍽️</span>
-                  <span>{s}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-        {showRemove && (
-          <button onClick={onRemove} className="btn-remove">
-            ✕
-          </button>
-        )}
-      </div>
-    );
-  };
-
-  // Calculate nutrition for a single meal
   // Check if a food entry contains a valid food name
-  const isValidFoodEntry = (entry) => {
+  const isValidFoodEntry = useCallback((entry) => {
     if (!entry || !entry.trim()) return false;
     const entryLower = entry.toLowerCase().trim();
     const parts = entryLower.split(' ');
@@ -614,123 +714,22 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
     if (parts.length >= 3 && foodData[parts.slice(0, 3).join(' ')]) return true;
     
     return false;
-  };
+  }, []);
 
-  const calculateMeal = (label, foods) => {
+  // Filter suggestions based on input
+  const getSuggestions = useCallback((input) => {
+    if (!input) return [];
+    const inputLower = input.toLowerCase();
+    return foodNames.filter(name => name.toLowerCase().includes(inputLower)).slice(0, 8);
+  }, [foodNames]);
+
+  const calculateMeal = useCallback((label, foods) => {
     const resultArr = [];
     foods.filter(f => f.trim()).forEach(food => {
       resultArr.push({ time: label, ...parseFoodEntry(food) });
     });
     return resultArr;
-  };
-
-  // Multi-food input section for a meal time
-  const MealSection = ({ label, foods, setFoods, placeholder, mealClass, icon, time }) => {
-    const [mealResults, setMealResults] = useState(null);
-
-    const addFood = () => {
-      setFoods([...foods, '']);
-    };
-
-    const updateFood = (index, value) => {
-      const newFoods = [...foods];
-      newFoods[index] = value;
-      setFoods(newFoods);
-      setMealResults(null); // Clear results when food changes
-    };
-
-    const removeFood = (index) => {
-      const newFoods = foods.filter((_, i) => i !== index);
-      setFoods(newFoods.length > 0 ? newFoods : ['']);
-      setMealResults(null);
-    };
-
-    const handleCalculateMeal = () => {
-      const results = calculateMeal(label, foods);
-      setMealResults(results);
-    };
-
-    // Only show calculate button if at least one food entry is valid
-    const hasValidFoods = foods.some(f => isValidFoodEntry(f));
-
-    // Calculate totals for this meal
-    const totals = mealResults ? mealResults.reduce((acc, item) => ({
-      protein: acc.protein + item.protein,
-      carbs: acc.carbs + item.carbs,
-      fiber: acc.fiber + item.fiber,
-      fat: acc.fat + item.fat
-    }), { protein: 0, carbs: 0, fiber: 0, fat: 0 }) : null;
-
-    return (
-      <div className={`meal-card ${mealClass || ''}`}>
-        <div className="meal-card-header">
-          <div className="meal-icon">{icon || '🍽️'}</div>
-          <div>
-            <h4 className="meal-title">{label}</h4>
-            <span className="meal-time">{time || ''}</span>
-          </div>
-        </div>
-        
-        {foods.map((food, index) => (
-          <FoodInput
-            key={index}
-            value={food}
-            onChange={(value) => updateFood(index, value)}
-            onRemove={() => removeFood(index)}
-            placeholder={placeholder}
-            showRemove={foods.length > 1}
-          />
-        ))}
-        
-        <div className="meal-actions">
-          <button onClick={addFood} className="btn-add-food">
-            <span>➕</span> Add Food
-          </button>
-          {hasValidFoods && (
-            <button onClick={handleCalculateMeal} className="btn-calculate">
-              <span>📊</span> Calculate {label}
-            </button>
-          )}
-        </div>
-
-        {mealResults && mealResults.length > 0 && (
-          <div className="results-container">
-            <table className="results-table">
-              <thead>
-                <tr>
-                  <th>Food</th>
-                  <th style={{ textAlign: 'right' }}>Protein</th>
-                  <th style={{ textAlign: 'right' }}>Carbs</th>
-                  <th style={{ textAlign: 'right' }}>Fiber</th>
-                  <th style={{ textAlign: 'right' }}>Fat</th>
-                </tr>
-              </thead>
-              <tbody>
-                {mealResults.map((item, idx) => (
-                  <tr key={idx}>
-                    <td>{item.food}</td>
-                    <td style={{ textAlign: 'right' }}>{item.protein}g</td>
-                    <td style={{ textAlign: 'right' }}>{item.carbs}g</td>
-                    <td style={{ textAlign: 'right' }}>{item.fiber}g</td>
-                    <td style={{ textAlign: 'right' }}>{item.fat}g</td>
-                  </tr>
-                ))}
-                {mealResults.length > 1 && (
-                  <tr className="results-total">
-                    <td><strong>Total</strong></td>
-                    <td style={{ textAlign: 'right' }}><strong>{totals.protein.toFixed(2)}g</strong></td>
-                    <td style={{ textAlign: 'right' }}><strong>{totals.carbs.toFixed(2)}g</strong></td>
-                    <td style={{ textAlign: 'right' }}><strong>{totals.fiber.toFixed(2)}g</strong></td>
-                    <td style={{ textAlign: 'right' }}><strong>{totals.fat.toFixed(2)}g</strong></td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-    );
-  };
+  }, []);
 
   // Check if at least one food is entered
   const hasAnyFood = () => {
@@ -986,6 +985,9 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
           mealClass="meal-morning"
           icon="🌅"
           time="6:00 AM - 10:00 AM"
+          getSuggestions={getSuggestions}
+          isValidFoodEntry={isValidFoodEntry}
+          calculateMeal={calculateMeal}
         />
         <MealSection 
           label="Evening" 
@@ -995,6 +997,9 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
           mealClass="meal-evening"
           icon="☀️"
           time="12:00 PM - 2:00 PM"
+          getSuggestions={getSuggestions}
+          isValidFoodEntry={isValidFoodEntry}
+          calculateMeal={calculateMeal}
         />
         <MealSection 
           label="Post Evening" 
@@ -1004,6 +1009,9 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
           mealClass="meal-post-evening"
           icon="🌆"
           time="4:00 PM - 6:00 PM"
+          getSuggestions={getSuggestions}
+          isValidFoodEntry={isValidFoodEntry}
+          calculateMeal={calculateMeal}
         />
         <MealSection 
           label="Night" 
@@ -1013,6 +1021,9 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
           mealClass="meal-night"
           icon="🌙"
           time="7:00 PM - 9:00 PM"
+          getSuggestions={getSuggestions}
+          isValidFoodEntry={isValidFoodEntry}
+          calculateMeal={calculateMeal}
         />
 
         {/* Trainer Tips */}
