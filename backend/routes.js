@@ -22,10 +22,10 @@ function authenticateToken(req, res, next) {
 
 // Signup
 router.post('/signup', async (req, res) => {
-  const { username, password, goal } = req.body;
+  const { username, password, weight, dob, goal } = req.body;
   if (!username || !password) return res.status(400).json({ error: 'Username and password required' });
   const hash = await bcrypt.hash(password, 10);
-  models.createUser(username, hash, goal || '', (err, userId) => {
+  models.createUser(username, hash, weight || null, dob || null, goal || '', (err, userId) => {
     if (err) return res.status(400).json({ error: 'Username already exists' });
     res.json({ success: true });
   });
@@ -39,7 +39,13 @@ router.post('/login', (req, res) => {
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(400).json({ error: 'Invalid credentials' });
     const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET);
-    res.json({ token, goal: user.goal });
+    res.json({ 
+      token, 
+      goal: user.goal,
+      weight: user.weight,
+      dob: user.dob,
+      username: user.username
+    });
   });
 });
 

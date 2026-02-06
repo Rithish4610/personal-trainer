@@ -890,19 +890,6 @@ function Dashboard({ goal, weight, dob, username }) {
           </div>
         )}
 
-        {/* Trainer Tips */}
-        <div className="trainer-tips">
-          <div className="tips-header">
-            <h4><span>💡</span> Today's Tips for You</h4>
-            <span className="tips-date">🔄 {today.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</span>
-          </div>
-          <ul className="tips-list">
-            {trainerTips.map((tip, idx) => (
-              <li key={idx} className="tip-item">{tip}</li>
-            ))}
-          </ul>
-          <p className="tips-refresh-note">✨ New personalized tips every day!</p>
-        </div>
       </div>
 
       {/* Motivational Quote */}
@@ -957,6 +944,20 @@ function Dashboard({ goal, weight, dob, username }) {
           icon="🌙"
           time="7:00 PM - 9:00 PM"
         />
+
+        {/* Trainer Tips */}
+        <div className="trainer-tips">
+          <div className="tips-header">
+            <h4><span>💡</span> Today's Tips for You</h4>
+            <span className="tips-date">🔄 {today.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</span>
+          </div>
+          <ul className="tips-list">
+            {trainerTips.map((tip, idx) => (
+              <li key={idx} className="tip-item">{tip}</li>
+            ))}
+          </ul>
+          <p className="tips-refresh-note">✨ New personalized tips every day!</p>
+        </div>
 
         {hasAnyValidFood() && (
           <button 

@@ -2,10 +2,10 @@
 const db = require('./db');
 
 // User CRUD
-const createUser = (username, password, goal, cb) => {
+const createUser = (username, password, weight, dob, goal, cb) => {
   db.run(
-    'INSERT INTO users (username, password, goal) VALUES (?, ?, ?)',
-    [username, password, goal],
+    'INSERT INTO users (username, password, weight, dob, goal) VALUES (?, ?, ?, ?, ?)',
+    [username, password, weight, dob, goal],
     function (err) {
       cb(err, this ? this.lastID : null);
     }

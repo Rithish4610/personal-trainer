@@ -19,6 +19,8 @@ db.serialize(() => {
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
+    weight REAL,
+    dob TEXT,
     goal TEXT
   )`);
 
