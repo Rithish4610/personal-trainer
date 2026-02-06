@@ -353,6 +353,171 @@ db.serialize(() => {
     );
   });
 
+  // Insert beans & legumes with nutritional data (per 100g cooked unless noted)
+  const beans = [
+    // Common Beans
+    ['Black Beans', 8.9, 23.7, 8.7, 0.5, '100g'],
+    ['Kidney Beans', 8.7, 22.8, 6.4, 0.5, '100g'],
+    ['Pinto Beans', 9.0, 26.2, 9.0, 0.7, '100g'],
+    ['Navy Beans', 8.2, 26.1, 10.5, 0.6, '100g'],
+    ['Cannellini Beans', 9.7, 24.9, 6.3, 0.6, '100g'],
+    ['Great Northern Beans', 8.3, 21.1, 7.0, 0.5, '100g'],
+    ['Black-Eyed Peas', 7.7, 20.8, 6.5, 0.5, '100g'],
+    ['Chickpeas (Garbanzo)', 8.9, 27.4, 7.6, 2.6, '100g'],
+    ['Lentils (Green)', 9.0, 20.1, 7.9, 0.4, '100g'],
+    ['Lentils (Red)', 9.0, 20.0, 5.5, 0.4, '100g'],
+    ['Lentils (Brown)', 9.0, 20.1, 7.9, 0.4, '100g'],
+    ['Lentils (Black)', 9.0, 20.0, 8.0, 0.5, '100g'],
+    ['Split Peas (Green)', 8.3, 21.1, 8.3, 0.4, '100g'],
+    ['Split Peas (Yellow)', 8.3, 21.1, 8.3, 0.4, '100g'],
+    ['Mung Beans', 7.0, 19.2, 7.6, 0.4, '100g'],
+    ['Adzuki Beans', 7.5, 24.8, 7.3, 0.1, '100g'],
+    ['Soybeans (Cooked)', 16.6, 9.9, 6.0, 9.0, '100g'],
+    ['Butter Beans', 7.4, 20.4, 7.2, 0.4, '100g'],
+    ['Cranberry Beans', 9.0, 25.0, 9.0, 0.5, '100g'],
+    ['Pigeon Peas', 6.8, 23.3, 6.7, 0.4, '100g'],
+    ['Lupini Beans', 15.6, 9.9, 2.8, 2.9, '100g'],
+    ['Broad Beans (Cooked)', 7.6, 17.6, 5.4, 0.4, '100g'],
+    
+    // Bean Products
+    ['Tofu (Firm)', 15.8, 2.3, 0.9, 8.7, '100g'],
+    ['Tofu (Silken)', 5.3, 2.2, 0.2, 2.7, '100g'],
+    ['Tempeh', 20.3, 7.6, 0, 10.8, '100g'],
+    ['Hummus', 7.9, 14.3, 6.0, 9.6, '100g'],
+    ['Refried Beans', 5.4, 15.4, 5.3, 2.5, '100g'],
+    ['Baked Beans', 5.5, 21.1, 5.5, 0.5, '100g'],
+    ['Bean Curd', 8.1, 1.9, 0.4, 4.8, '100g'],
+    ['Miso', 12.8, 26.5, 5.4, 6.0, '100g'],
+    ['Natto', 18.0, 14.4, 5.4, 11.0, '100g'],
+    
+    // Peanuts & Legume Nuts
+    ['Peanuts (Raw)', 25.8, 16.1, 8.5, 49.2, '100g'],
+    ['Peanut Butter', 25.1, 20.0, 6.0, 50.4, '100g'],
+    ['Peanuts (Roasted)', 26.2, 21.5, 8.0, 49.7, '100g']
+  ];
+
+  beans.forEach(item => {
+    db.run(
+      `INSERT OR IGNORE INTO foods (name, protein, carbs, fiber, fat, unit) VALUES (?, ?, ?, ?, ?, ?)`,
+      item
+    );
+  });
+
+  // Insert grains with nutritional data (per 100g cooked unless noted)
+  const grains = [
+    // Rice
+    ['White Rice', 2.7, 28.2, 0.4, 0.3, '100g'],
+    ['Brown Rice', 2.6, 23.0, 1.8, 0.9, '100g'],
+    ['Basmati Rice', 3.5, 25.2, 0.4, 0.4, '100g'],
+    ['Jasmine Rice', 2.7, 28.0, 0.4, 0.3, '100g'],
+    ['Wild Rice', 4.0, 21.3, 1.8, 0.3, '100g'],
+    ['Black Rice', 3.5, 23.0, 1.4, 1.0, '100g'],
+    ['Red Rice', 2.8, 23.5, 1.8, 0.8, '100g'],
+    ['Arborio Rice', 2.4, 24.0, 0.6, 0.2, '100g'],
+    ['Sticky Rice', 2.0, 21.0, 0.3, 0.2, '100g'],
+    ['Parboiled Rice', 2.9, 25.1, 0.5, 0.3, '100g'],
+    
+    // Wheat & Wheat Products
+    ['Whole Wheat Flour', 13.2, 71.2, 10.7, 2.5, '100g'],
+    ['All-Purpose Flour', 10.3, 76.3, 2.7, 1.0, '100g'],
+    ['Bread (White)', 9.0, 49.0, 2.7, 3.2, '100g'],
+    ['Bread (Whole Wheat)', 13.0, 41.3, 7.0, 3.4, '100g'],
+    ['Wheat Berries', 9.6, 42.5, 6.8, 1.0, '100g'],
+    ['Bulgur Wheat', 3.1, 18.6, 4.5, 0.2, '100g'],
+    ['Couscous', 3.8, 23.2, 1.4, 0.2, '100g'],
+    ['Semolina', 12.7, 72.8, 3.9, 1.1, '100g'],
+    ['Wheat Bran', 15.6, 64.5, 42.8, 4.3, '100g'],
+    ['Wheat Germ', 23.2, 51.8, 13.2, 9.7, '100g'],
+    ['Pasta (White)', 5.8, 30.9, 1.8, 0.9, '100g'],
+    ['Pasta (Whole Wheat)', 5.3, 26.5, 4.5, 0.5, '100g'],
+    ['Egg Noodles', 4.5, 25.0, 1.2, 1.6, '100g'],
+    ['Ramen Noodles', 4.5, 26.0, 1.0, 1.0, '100g'],
+    ['Spaghetti', 5.8, 30.9, 1.8, 0.9, '100g'],
+    ['Fettuccine', 5.8, 30.9, 1.8, 0.9, '100g'],
+    ['Penne', 5.8, 30.9, 1.8, 0.9, '100g'],
+    ['Macaroni', 5.8, 30.9, 1.8, 0.9, '100g'],
+    ['Orzo', 5.8, 30.9, 1.8, 0.9, '100g'],
+    
+    // Oats
+    ['Oatmeal (Cooked)', 2.5, 12.0, 1.7, 1.5, '100g'],
+    ['Rolled Oats (Dry)', 13.2, 67.7, 10.1, 6.5, '100g'],
+    ['Steel Cut Oats', 13.0, 66.0, 10.0, 6.0, '100g'],
+    ['Instant Oatmeal', 11.8, 68.2, 9.4, 6.3, '100g'],
+    ['Oat Bran', 17.3, 66.2, 15.4, 7.0, '100g'],
+    ['Oat Flour', 14.7, 65.7, 6.5, 9.1, '100g'],
+    
+    // Corn Products
+    ['Cornmeal', 8.1, 79.5, 7.3, 3.6, '100g'],
+    ['Polenta (Cooked)', 2.1, 13.0, 1.0, 0.3, '100g'],
+    ['Grits (Cooked)', 1.4, 13.5, 0.6, 0.2, '100g'],
+    ['Corn Tortilla', 5.7, 44.6, 6.3, 2.9, '100g'],
+    ['Cornstarch', 0.3, 91.3, 0.9, 0.1, '100g'],
+    ['Popcorn (Air Popped)', 12.9, 77.8, 14.5, 4.5, '100g'],
+    
+    // Ancient Grains
+    ['Quinoa', 4.4, 21.3, 2.8, 1.9, '100g'],
+    ['Amaranth', 3.8, 19.0, 2.1, 1.6, '100g'],
+    ['Buckwheat', 3.4, 19.9, 2.7, 0.6, '100g'],
+    ['Millet', 3.5, 23.7, 1.3, 1.0, '100g'],
+    ['Teff', 3.9, 19.9, 2.8, 0.7, '100g'],
+    ['Sorghum', 3.5, 23.0, 1.6, 1.1, '100g'],
+    ['Farro', 6.0, 27.0, 3.0, 1.0, '100g'],
+    ['Spelt', 5.5, 26.4, 3.9, 0.9, '100g'],
+    ['Kamut', 6.5, 27.6, 3.7, 1.0, '100g'],
+    ['Freekeh', 5.3, 24.0, 8.0, 1.2, '100g'],
+    ['Einkorn Wheat', 7.0, 28.0, 4.0, 1.5, '100g'],
+    
+    // Barley & Rye
+    ['Barley (Pearled)', 2.3, 28.2, 3.8, 0.4, '100g'],
+    ['Barley (Hulled)', 2.3, 28.2, 6.5, 0.4, '100g'],
+    ['Rye Berries', 3.0, 28.0, 5.8, 0.8, '100g'],
+    ['Rye Flour', 10.9, 75.9, 15.1, 1.5, '100g'],
+    ['Rye Bread', 8.5, 48.3, 5.8, 3.3, '100g'],
+    
+    // Breakfast Cereals
+    ['Granola', 9.4, 64.4, 5.3, 14.9, '100g'],
+    ['Corn Flakes', 7.5, 84.1, 3.3, 0.4, '100g'],
+    ['Bran Flakes', 10.2, 75.4, 18.3, 2.0, '100g'],
+    ['Shredded Wheat', 10.6, 79.9, 12.5, 1.6, '100g'],
+    ['Muesli', 10.4, 66.3, 7.8, 6.5, '100g'],
+    ['Puffed Rice', 6.3, 89.8, 1.2, 0.5, '100g'],
+    ['Rice Krispies', 6.6, 87.0, 1.0, 1.0, '100g'],
+    ['Cheerios', 11.3, 74.3, 10.1, 6.0, '100g'],
+    
+    // Other Grain Products
+    ['Bread Crumbs', 13.4, 72.0, 4.5, 5.3, '100g'],
+    ['Crackers (Whole Wheat)', 9.5, 67.2, 10.9, 14.1, '100g'],
+    ['Crackers (Saltine)', 9.3, 74.0, 2.9, 8.6, '100g'],
+    ['Bagel', 10.0, 53.0, 2.3, 1.6, '100g'],
+    ['English Muffin', 8.7, 46.0, 2.8, 2.0, '100g'],
+    ['Pita Bread', 9.1, 55.7, 2.2, 1.2, '100g'],
+    ['Naan Bread', 9.1, 50.1, 2.1, 3.4, '100g'],
+    ['Tortilla (Flour)', 8.3, 49.9, 3.3, 6.8, '100g'],
+    ['Croissant', 8.2, 45.8, 2.6, 21.0, '100g'],
+    ['Baguette', 9.0, 54.0, 2.4, 1.0, '100g'],
+    ['Ciabatta', 9.5, 50.0, 2.5, 3.5, '100g'],
+    ['Focaccia', 8.0, 47.0, 2.0, 9.0, '100g'],
+    ['Rice Cakes', 7.9, 81.1, 4.2, 2.8, '100g'],
+    ['Rice Paper', 0.8, 86.0, 0.6, 0.1, '100g'],
+    
+    // Gluten-Free Grains
+    ['Rice Flour', 6.0, 80.1, 2.4, 1.4, '100g'],
+    ['Tapioca', 0.2, 88.7, 0.9, 0.02, '100g'],
+    ['Arrowroot', 0.3, 88.2, 3.4, 0.1, '100g'],
+    ['Sago', 0.2, 94.0, 0.4, 0.02, '100g'],
+    ['Buckwheat Flour', 12.6, 70.6, 10.0, 3.1, '100g'],
+    ['Almond Flour', 21.0, 21.4, 10.5, 49.4, '100g'],
+    ['Coconut Flour', 19.3, 60.0, 39.0, 8.8, '100g'],
+    ['Chickpea Flour', 22.4, 57.8, 10.8, 6.7, '100g']
+  ];
+
+  grains.forEach(item => {
+    db.run(
+      `INSERT OR IGNORE INTO foods (name, protein, carbs, fiber, fat, unit) VALUES (?, ?, ?, ?, ?, ?)`,
+      item
+    );
+  });
+
   db.run(`CREATE TABLE IF NOT EXISTS entries (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER,
