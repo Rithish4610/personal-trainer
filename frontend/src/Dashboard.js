@@ -9,6 +9,7 @@ function Dashboard({ goal, weight, dob, username }) {
   const [postEveningFoods, setPostEveningFoods] = useState(['']);
   const [nightFoods, setNightFoods] = useState(['']);
   const [results, setResults] = useState(null);
+  const [showProfile, setShowProfile] = useState(false);
 
   // Calculate age from DOB
   const calculateAge = (dobString) => {
@@ -785,18 +786,84 @@ function Dashboard({ goal, weight, dob, username }) {
 
   return (
     <div className="dashboard">
+      {/* Profile Modal */}
+      {showProfile && (
+        <div className="profile-modal-overlay" onClick={() => setShowProfile(false)}>
+          <div className="profile-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="profile-modal-header">
+              <h2>👤 My Profile</h2>
+              <button className="profile-close-btn" onClick={() => setShowProfile(false)}>✕</button>
+            </div>
+            <div className="profile-modal-content">
+              <div className="profile-avatar-large">
+                {username ? username.charAt(0).toUpperCase() : '👤'}
+              </div>
+              <div className="profile-info-list">
+                <div className="profile-info-item">
+                  <span className="profile-info-icon">👤</span>
+                  <div className="profile-info-details">
+                    <span className="profile-info-label">Name</span>
+                    <span className="profile-info-value">{username || 'Not set'}</span>
+                  </div>
+                </div>
+                <div className="profile-info-item">
+                  <span className="profile-info-icon">🎂</span>
+                  <div className="profile-info-details">
+                    <span className="profile-info-label">Age</span>
+                    <span className="profile-info-value">{age ? `${age} years old` : 'Not set'}</span>
+                  </div>
+                </div>
+                <div className="profile-info-item">
+                  <span className="profile-info-icon">📅</span>
+                  <div className="profile-info-details">
+                    <span className="profile-info-label">Date of Birth</span>
+                    <span className="profile-info-value">{dob ? new Date(dob).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Not set'}</span>
+                  </div>
+                </div>
+                <div className="profile-info-item">
+                  <span className="profile-info-icon">⚖️</span>
+                  <div className="profile-info-details">
+                    <span className="profile-info-label">Weight</span>
+                    <span className="profile-info-value">{weightNum ? `${weightNum} kg` : 'Not set'}</span>
+                  </div>
+                </div>
+                <div className="profile-info-item">
+                  <span className="profile-info-icon">{getGoalIcon()}</span>
+                  <div className="profile-info-details">
+                    <span className="profile-info-label">Fitness Goal</span>
+                    <span className="profile-info-value">{goal ? goal.charAt(0).toUpperCase() + goal.slice(1) : 'Not set'}</span>
+                  </div>
+                </div>
+                <div className="profile-info-item">
+                  <span className="profile-info-icon">🎯</span>
+                  <div className="profile-info-details">
+                    <span className="profile-info-label">Daily Protein Target</span>
+                    <span className="profile-info-value">{proteinGoal.recommended}g ({proteinGoal.min}g - {proteinGoal.max}g)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Dashboard Header */}
       <div className="dashboard-header">
         <div className="welcome-section">
           <h1>Welcome back, <span>{username || 'Champion'}!</span></h1>
           <p>Ready to crush your fitness goals today? Let's track your nutrition.</p>
         </div>
-        {goal && (
-          <div className="goal-badge">
-            <span className="goal-badge-icon">{getGoalIcon()}</span>
-            {goal.charAt(0).toUpperCase() + goal.slice(1)}
-          </div>
-        )}
+        <div className="header-actions">
+          {goal && (
+            <div className="goal-badge">
+              <span className="goal-badge-icon">{getGoalIcon()}</span>
+              {goal.charAt(0).toUpperCase() + goal.slice(1)}
+            </div>
+          )}
+          <button className="profile-icon-btn" onClick={() => setShowProfile(true)} title="View Profile">
+            <span className="profile-avatar">{username ? username.charAt(0).toUpperCase() : '👤'}</span>
+          </button>
+        </div>
       </div>
 
       {/* Quick Stats Overview */}
