@@ -70,20 +70,21 @@ router.get('/summary', authenticateToken, (req, res) => {
   models.getEntriesByUserAndDate(user_id, date, (err, entries) => {
     if (err) return res.status(500).json({ error: 'Failed to fetch entries' });
     // Join with food table to get nutrition
-    if (!entries.length) return res.json({ protein: 0, carbs: 0, fiber: 0, entries: [] });
+    if (!entries.length) return res.json({ protein: 0, carbs: 0, fiber: 0, fat: 0, entries: [] });
     const ids = entries.map(e => e.food_id);
     db.all('SELECT * FROM foods WHERE id IN (' + ids.map(() => '?').join(',') + ')', ids, (err, foods) => {
       if (err) return res.status(500).json({ error: 'Failed to fetch foods' });
-      let protein = 0, carbs = 0, fiber = 0;
+      let protein = 0, carbs = 0, fiber = 0, fat = 0;
       entries.forEach(entry => {
         const food = foods.find(f => f.id === entry.food_id);
         if (food) {
           protein += food.protein * entry.quantity;
           carbs += food.carbs * entry.quantity;
           fiber += food.fiber * entry.quantity;
+          fat += (food.fat || 0) * entry.quantity;
         }
       });
-      res.json({ protein, carbs, fiber, entries });
+      res.json({ protein, carbs, fiber, fat, entries });
     });
   });
 });

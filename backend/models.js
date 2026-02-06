@@ -17,10 +17,10 @@ const getUserByUsername = (username, cb) => {
 };
 
 // Food CRUD
-const addFood = (name, protein, carbs, fiber, unit, cb) => {
+const addFood = (name, protein, carbs, fiber, fat, unit, cb) => {
   db.run(
-    'INSERT INTO foods (name, protein, carbs, fiber, unit) VALUES (?, ?, ?, ?, ?)',
-    [name, protein, carbs, fiber, unit],
+    'INSERT INTO foods (name, protein, carbs, fiber, fat, unit) VALUES (?, ?, ?, ?, ?, ?)',
+    [name, protein, carbs, fiber, fat, unit],
     cb
   );
 };
