@@ -946,6 +946,247 @@ body {
   font-weight: 600;
 }
 
+/* Calorie Target Section */
+.calorie-target-card {
+  padding: var(--space-xl);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.calorie-target-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.calorie-target-icon {
+  font-size: 32px;
+}
+
+.calorie-target-header h4 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.calorie-target-value {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.calorie-main {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.calorie-range {
+  font-size: 14px;
+  color: var(--text-muted);
+  background: var(--bg-input);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-full);
+}
+
+.calorie-description {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-md);
+}
+
+.calorie-badge {
+  display: inline-block;
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.calorie-badge.surplus {
+  background: rgba(0, 212, 170, 0.15);
+  color: var(--secondary);
+}
+
+.calorie-badge.deficit {
+  background: rgba(255, 107, 53, 0.15);
+  color: var(--primary);
+}
+
+/* Macro Split Section */
+.macro-split-card {
+  padding: var(--space-xl);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.macro-split-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.macro-split-icon {
+  font-size: 32px;
+}
+
+.macro-split-header h4 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.macro-description {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-lg);
+}
+
+.macro-bars {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.macro-bar-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.macro-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.macro-bar-label span:first-child {
+  font-weight: 500;
+}
+
+.macro-bar-track {
+  height: 10px;
+  background: var(--bg-input);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.macro-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.macro-bar-fill.protein-fill {
+  background: linear-gradient(90deg, #ff6b35 0%, #ff8f5a 100%);
+}
+
+.macro-bar-fill.carbs-fill {
+  background: linear-gradient(90deg, #00d4aa 0%, #00e6b8 100%);
+}
+
+.macro-bar-fill.fat-fill {
+  background: linear-gradient(90deg, #6c5ce7 0%, #8b7cf0 100%);
+}
+
+/* Workout Plan Section */
+.workout-plan-card {
+  padding: var(--space-xl);
+}
+
+.workout-plan-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.workout-plan-icon {
+  font-size: 32px;
+}
+
+.workout-plan-header h4 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.workout-focus {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+  padding: var(--space-md);
+  background: var(--gradient-primary);
+  border-radius: var(--radius-md);
+}
+
+.focus-label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.focus-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+}
+
+.workout-schedule {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.schedule-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: var(--bg-input);
+  border-radius: var(--radius-md);
+}
+
+.schedule-icon {
+  font-size: 20px;
+}
+
+.schedule-label {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.schedule-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-left: auto;
+}
+
+.workout-tips {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.workout-tips li {
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(255, 107, 53, 0.08);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: var(--text-secondary);
+  border-left: 3px solid var(--primary);
+}
+
 /* Trainer Tips Section */
 .trainer-tips {
   padding: var(--space-xl);

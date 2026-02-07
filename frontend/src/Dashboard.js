@@ -211,6 +211,9 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
       case 'muscle':
         // Highest protein for muscle building: 1.8-2.4g per kg
         return { min: Math.round(weightNum * 1.8), max: Math.round(weightNum * 2.4), recommended: Math.round(weightNum * 2.0) };
+      case 'body recomp':
+        // High protein for body recomposition: 1.8-2.2g per kg
+        return { min: Math.round(weightNum * 1.8), max: Math.round(weightNum * 2.2), recommended: Math.round(weightNum * 2.0) };
       case 'general fitness':
         // Moderate protein: 1.2-1.6g per kg
         return { min: Math.round(weightNum * 1.2), max: Math.round(weightNum * 1.6), recommended: Math.round(weightNum * 1.4) };
@@ -220,6 +223,134 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
   };
 
   const proteinGoal = getProteinGoal();
+
+  // Calculate daily calorie target based on goal, weight, and age
+  const getCalorieTarget = () => {
+    if (!weightNum) return { min: 0, max: 0, recommended: 0, deficit: 0 };
+    // Base metabolic rate estimate (simplified Mifflin-St Jeor)
+    const bmr = 10 * weightNum + (age ? 5 * 170 - 5 * age : 500) + 5; // Assuming average height
+    const tdee = bmr * 1.55; // Moderate activity multiplier
+    
+    switch(goal?.toLowerCase()) {
+      case 'fat loss':
+        return { 
+          min: Math.round(tdee - 700), 
+          max: Math.round(tdee - 300), 
+          recommended: Math.round(tdee - 500),
+          deficit: -500,
+          description: 'Caloric deficit for fat loss'
+        };
+      case 'muscle':
+        return { 
+          min: Math.round(tdee + 200), 
+          max: Math.round(tdee + 500), 
+          recommended: Math.round(tdee + 300),
+          deficit: 300,
+          description: 'Caloric surplus for muscle gain'
+        };
+      case 'body recomp':
+        return { 
+          min: Math.round(tdee - 200), 
+          max: Math.round(tdee + 200), 
+          recommended: Math.round(tdee),
+          deficit: 0,
+          description: 'Maintenance calories for recomposition'
+        };
+      case 'general fitness':
+        return { 
+          min: Math.round(tdee - 200), 
+          max: Math.round(tdee + 200), 
+          recommended: Math.round(tdee),
+          deficit: 0,
+          description: 'Maintenance for general health'
+        };
+      default:
+        return { min: Math.round(tdee - 200), max: Math.round(tdee + 200), recommended: Math.round(tdee), deficit: 0, description: 'Estimated daily calories' };
+    }
+  };
+
+  const calorieTarget = getCalorieTarget();
+
+  // Get macro split based on goal
+  const getMacroSplit = () => {
+    switch(goal?.toLowerCase()) {
+      case 'fat loss':
+        return { protein: 40, carbs: 30, fat: 30, description: 'High protein, moderate carbs & fat' };
+      case 'muscle':
+        return { protein: 30, carbs: 45, fat: 25, description: 'High carbs for energy & growth' };
+      case 'body recomp':
+        return { protein: 35, carbs: 35, fat: 30, description: 'Balanced macros for recomp' };
+      case 'general fitness':
+        return { protein: 25, carbs: 45, fat: 30, description: 'Balanced nutrition' };
+      default:
+        return { protein: 30, carbs: 40, fat: 30, description: 'Balanced macros' };
+    }
+  };
+
+  const macroSplit = getMacroSplit();
+
+  // Get workout recommendations based on goal
+  const getWorkoutPlan = () => {
+    switch(goal?.toLowerCase()) {
+      case 'fat loss':
+        return {
+          focus: 'HIIT + Strength',
+          cardio: '4-5 sessions/week',
+          strength: '3-4 sessions/week',
+          tips: [
+            '🔥 30-45 min HIIT sessions burn maximum calories',
+            '💪 Include compound lifts to preserve muscle',
+            '🚶 Add 10,000 daily steps for extra burn',
+            '⏰ Morning fasted cardio can enhance fat oxidation'
+          ]
+        };
+      case 'muscle':
+        return {
+          focus: 'Heavy Lifting',
+          cardio: '1-2 sessions/week (light)',
+          strength: '5-6 sessions/week',
+          tips: [
+            '🏋️ Focus on progressive overload each week',
+            '💥 Compound movements: Squats, Deadlifts, Bench',
+            '⏱️ Rest 2-3 minutes between heavy sets',
+            '🔄 Train each muscle group 2x per week'
+          ]
+        };
+      case 'body recomp':
+        return {
+          focus: 'Strength + Moderate Cardio',
+          cardio: '2-3 sessions/week',
+          strength: '4-5 sessions/week',
+          tips: [
+            '⚖️ Prioritize strength training to build muscle',
+            '🎯 Train in the 6-12 rep range for hypertrophy',
+            '🏃 Low-intensity cardio on rest days',
+            '📊 Track lifts - aim to increase weight weekly'
+          ]
+        };
+      case 'general fitness':
+        return {
+          focus: 'Balanced Training',
+          cardio: '3-4 sessions/week',
+          strength: '2-3 sessions/week',
+          tips: [
+            '🌟 Mix cardio, strength, and flexibility work',
+            '🧘 Include yoga or stretching 2x per week',
+            '🚴 Try different activities to stay engaged',
+            '👥 Group classes are great for motivation'
+          ]
+        };
+      default:
+        return {
+          focus: 'General Fitness',
+          cardio: '3 sessions/week',
+          strength: '2-3 sessions/week',
+          tips: ['Start with a balanced mix of cardio and strength training']
+        };
+    }
+  };
+
+  const workoutPlan = getWorkoutPlan();
 
   // Get today's date as a number for rotating tips
   const today = new Date();
@@ -278,6 +409,23 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
         "🌅 Morning workouts boost energy for the entire day",
         "🍽️ Meal prep on weekends saves time and ensures healthy eating",
         "🎯 Set small, achievable weekly goals to stay motivated"
+      ],
+      'body recomp': [
+        "⚖️ Body recomp needs patience - trust the process!",
+        "💪 Prioritize protein intake to build muscle while losing fat",
+        "🏋️ Lift heavy - strength training is key for recomposition",
+        "📊 Scale weight may not change much - track measurements instead",
+        "🍗 Eat protein with every meal - aim for 4-5 servings daily",
+        "⏰ Timing matters - eat more on training days, less on rest days",
+        "😴 Sleep is crucial - aim for 7-9 hours for optimal results",
+        "🔄 Cycle calories: higher on workout days, lower on rest days",
+        "📸 Take progress photos weekly - the mirror tells the truth",
+        "🎯 Focus on getting stronger - muscle will come with strength",
+        "🥩 Don't fear protein - you need 2g per kg bodyweight minimum",
+        "💧 Stay hydrated - water helps with nutrient transport",
+        "🧠 Recomp is a marathon, not a sprint - be consistent",
+        "🏃 Keep cardio moderate - too much can hinder muscle growth",
+        "📈 Track your lifts - progressive overload drives results"
       ]
     };
 
@@ -778,6 +926,7 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
     switch(goal?.toLowerCase()) {
       case 'fat loss': return '🔥';
       case 'muscle': return '💪';
+      case 'body recomp': return '⚖️';
       case 'general fitness': return '🏃';
       default: return '🎯';
     }
@@ -958,6 +1107,93 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
             </p>
           </div>
         )}
+
+        {/* Calorie Target */}
+        {calorieTarget.recommended > 0 && (
+          <div className="calorie-target-card">
+            <div className="calorie-target-header">
+              <span className="calorie-target-icon">🔥</span>
+              <h4>Daily Calorie Target</h4>
+            </div>
+            <div className="calorie-target-value">
+              <span className="calorie-main">{calorieTarget.recommended} kcal</span>
+              <span className="calorie-range">Range: {calorieTarget.min} - {calorieTarget.max} kcal</span>
+            </div>
+            <p className="calorie-description">{calorieTarget.description}</p>
+            {calorieTarget.deficit !== 0 && (
+              <span className={`calorie-badge ${calorieTarget.deficit > 0 ? 'surplus' : 'deficit'}`}>
+                {calorieTarget.deficit > 0 ? `+${calorieTarget.deficit}` : calorieTarget.deficit} kcal/day
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Macro Split */}
+        <div className="macro-split-card">
+          <div className="macro-split-header">
+            <span className="macro-split-icon">📊</span>
+            <h4>Recommended Macro Split</h4>
+          </div>
+          <p className="macro-description">{macroSplit.description}</p>
+          <div className="macro-bars">
+            <div className="macro-bar-item">
+              <div className="macro-bar-label">
+                <span>🥩 Protein</span>
+                <span>{macroSplit.protein}%</span>
+              </div>
+              <div className="macro-bar-track">
+                <div className="macro-bar-fill protein-fill" style={{ width: `${macroSplit.protein}%` }}></div>
+              </div>
+            </div>
+            <div className="macro-bar-item">
+              <div className="macro-bar-label">
+                <span>🍚 Carbs</span>
+                <span>{macroSplit.carbs}%</span>
+              </div>
+              <div className="macro-bar-track">
+                <div className="macro-bar-fill carbs-fill" style={{ width: `${macroSplit.carbs}%` }}></div>
+              </div>
+            </div>
+            <div className="macro-bar-item">
+              <div className="macro-bar-label">
+                <span>🥑 Fat</span>
+                <span>{macroSplit.fat}%</span>
+              </div>
+              <div className="macro-bar-track">
+                <div className="macro-bar-fill fat-fill" style={{ width: `${macroSplit.fat}%` }}></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Workout Plan */}
+        <div className="workout-plan-card">
+          <div className="workout-plan-header">
+            <span className="workout-plan-icon">🏋️</span>
+            <h4>Your Workout Plan</h4>
+          </div>
+          <div className="workout-focus">
+            <span className="focus-label">Focus:</span>
+            <span className="focus-value">{workoutPlan.focus}</span>
+          </div>
+          <div className="workout-schedule">
+            <div className="schedule-item">
+              <span className="schedule-icon">🏃</span>
+              <span className="schedule-label">Cardio:</span>
+              <span className="schedule-value">{workoutPlan.cardio}</span>
+            </div>
+            <div className="schedule-item">
+              <span className="schedule-icon">💪</span>
+              <span className="schedule-label">Strength:</span>
+              <span className="schedule-value">{workoutPlan.strength}</span>
+            </div>
+          </div>
+          <ul className="workout-tips">
+            {workoutPlan.tips.map((tip, idx) => (
+              <li key={idx}>{tip}</li>
+            ))}
+          </ul>
+        </div>
 
       </div>
 
