@@ -1792,3 +1792,511 @@ body {
 .dashboard > *:nth-child(3) { animation-delay: 0.3s; }
 .dashboard > *:nth-child(4) { animation-delay: 0.4s; }
 .dashboard > *:nth-child(5) { animation-delay: 0.5s; }
+
+/* ============================================
+   FITNESS METRICS SECTION
+   ============================================ */
+.fitness-metrics-section,
+.weekly-schedule-section,
+.heart-rate-section,
+.meal-timing-section,
+.recovery-section,
+.supplements-section,
+.milestones-section {
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
+  margin-bottom: var(--space-xl);
+  border: 1px solid var(--border-color);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.section-icon {
+  font-size: 32px;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.section-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* Metrics Grid */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-lg);
+}
+
+.metric-card {
+  background: var(--bg-input);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  text-align: center;
+  border: 1px solid var(--border-color);
+  transition: var(--transition-base);
+}
+
+.metric-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-light);
+  box-shadow: var(--shadow-md);
+}
+
+.metric-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.metric-header h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.metric-icon {
+  font-size: 24px;
+}
+
+.metric-value-large {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: var(--space-sm);
+}
+
+.water-value {
+  background: linear-gradient(135deg, #3498db, #00d4aa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.sleep-value {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.fiber-value {
+  background: linear-gradient(135deg, #00b894, #55efc4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.metric-label-badge {
+  display: inline-block;
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: var(--space-md);
+}
+
+.metric-range {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: var(--space-md);
+}
+
+.metric-tip {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Weekly Schedule Grid */
+.weekly-schedule-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--space-md);
+}
+
+.schedule-day-card {
+  background: var(--bg-input);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  text-align: center;
+  border: 1px solid var(--border-color);
+  transition: var(--transition-base);
+}
+
+.schedule-day-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.schedule-day-card.rest-day {
+  background: rgba(108, 92, 231, 0.1);
+  border-color: rgba(108, 92, 231, 0.3);
+}
+
+.day-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: var(--space-sm);
+  text-transform: uppercase;
+}
+
+.day-icon {
+  font-size: 24px;
+  margin-bottom: var(--space-sm);
+}
+
+.day-workout {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+  line-height: 1.3;
+}
+
+.day-duration {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* Heart Rate Zones */
+.hr-zones-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-md);
+}
+
+.hr-zone-card {
+  background: var(--bg-input);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  border-left: 4px solid;
+  transition: var(--transition-base);
+}
+
+.hr-zone-card:hover {
+  transform: translateX(4px);
+}
+
+.hr-zone-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-sm);
+}
+
+.hr-zone-name {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.hr-zone-percent {
+  font-size: 12px;
+  color: var(--text-muted);
+  background: var(--bg-card);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.hr-zone-range {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.hr-zone-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Meal Timing */
+.meal-timing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.meal-timing-card {
+  background: var(--bg-input);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  text-align: center;
+  border: 1px solid var(--border-color);
+  transition: var(--transition-base);
+}
+
+.meal-timing-card:hover {
+  border-color: var(--secondary);
+}
+
+.meal-timing-time {
+  font-size: 12px;
+  color: var(--secondary);
+  font-weight: 600;
+  margin-bottom: var(--space-xs);
+}
+
+.meal-timing-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.meal-timing-notes {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.meal-timing-tip {
+  background: var(--secondary-light);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  color: var(--secondary);
+  text-align: center;
+}
+
+/* Recovery Grid */
+.recovery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-md);
+}
+
+.recovery-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  background: var(--bg-input);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  border: 1px solid var(--border-color);
+  transition: var(--transition-base);
+}
+
+.recovery-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.recovery-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.recovery-content h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.recovery-content p {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* Supplements Grid */
+.supplements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-md);
+}
+
+.supplement-card {
+  background: var(--bg-input);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  text-align: center;
+  border: 1px solid var(--border-color);
+  transition: var(--transition-base);
+}
+
+.supplement-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.supplement-card.priority-essential {
+  border-color: rgba(0, 212, 170, 0.4);
+  background: rgba(0, 212, 170, 0.05);
+}
+
+.supplement-card.priority-high {
+  border-color: rgba(255, 107, 53, 0.4);
+  background: rgba(255, 107, 53, 0.05);
+}
+
+.supplement-icon {
+  font-size: 32px;
+  display: block;
+  margin-bottom: var(--space-sm);
+}
+
+.supplement-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+}
+
+.supplement-priority {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+}
+
+.supplement-priority.essential {
+  background: var(--secondary-light);
+  color: var(--secondary);
+}
+
+.supplement-priority.high {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.supplement-priority.optional {
+  background: var(--bg-card);
+  color: var(--text-muted);
+}
+
+/* Milestones Timeline */
+.milestones-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  position: relative;
+  padding-left: var(--space-xl);
+}
+
+.milestones-timeline::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--primary), var(--secondary), var(--accent));
+  border-radius: 2px;
+}
+
+.milestone-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  position: relative;
+}
+
+.milestone-marker {
+  position: absolute;
+  left: -32px;
+  width: 36px;
+  height: 36px;
+  background: var(--bg-card);
+  border: 2px solid var(--primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.milestone-icon {
+  font-size: 16px;
+}
+
+.milestone-content {
+  background: var(--bg-input);
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-lg);
+  flex: 1;
+  border: 1px solid var(--border-color);
+  transition: var(--transition-base);
+}
+
+.milestone-content:hover {
+  border-color: var(--primary);
+  transform: translateX(4px);
+}
+
+.milestone-week {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: var(--space-xs);
+}
+
+.milestone-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* Responsive adjustments for fitness sections */
+@media (max-width: 768px) {
+  .weekly-schedule-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .hr-zones-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .meal-timing-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .weekly-schedule-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .hr-zones-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .meal-timing-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .milestones-timeline {
+    padding-left: var(--space-lg);
+  }
+  
+  .milestone-marker {
+    left: -24px;
+    width: 28px;
+    height: 28px;
+  }
+}

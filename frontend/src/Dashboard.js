@@ -352,6 +352,394 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
 
   const workoutPlan = getWorkoutPlan();
 
+  // Calculate BMI (assuming average height of 170cm if not provided)
+  const getBMI = () => {
+    if (!weightNum) return null;
+    const heightM = 1.70; // Default height assumption
+    const bmi = weightNum / (heightM * heightM);
+    let category, color, recommendation;
+    
+    if (bmi < 18.5) {
+      category = 'Underweight';
+      color = '#3498db';
+      recommendation = 'Focus on nutrient-dense foods and gradual weight gain';
+    } else if (bmi < 25) {
+      category = 'Normal';
+      color = '#00d4aa';
+      recommendation = 'Maintain your healthy weight with balanced nutrition';
+    } else if (bmi < 30) {
+      category = 'Overweight';
+      color = '#ffc107';
+      recommendation = 'Gradual caloric deficit with regular exercise recommended';
+    } else {
+      category = 'Obese';
+      color = '#ff4757';
+      recommendation = 'Consult a healthcare provider for personalized guidance';
+    }
+    
+    return { value: bmi.toFixed(1), category, color, recommendation };
+  };
+
+  const bmiData = getBMI();
+
+  // Calculate daily water intake based on weight and goal
+  const getWaterIntake = () => {
+    if (!weightNum) return { min: 2, max: 3, recommended: 2.5 };
+    
+    // Base: 35ml per kg of body weight
+    const baseWater = weightNum * 0.035;
+    
+    switch(goal?.toLowerCase()) {
+      case 'fat loss':
+        // Extra water helps with metabolism and fullness
+        return { 
+          min: Math.round((baseWater + 0.5) * 10) / 10, 
+          max: Math.round((baseWater + 1.5) * 10) / 10, 
+          recommended: Math.round((baseWater + 1) * 10) / 10,
+          tip: 'Drink water before meals to reduce appetite'
+        };
+      case 'muscle':
+        // Muscle tissue needs more hydration
+        return { 
+          min: Math.round((baseWater + 0.5) * 10) / 10, 
+          max: Math.round((baseWater + 1.5) * 10) / 10, 
+          recommended: Math.round((baseWater + 1) * 10) / 10,
+          tip: 'Stay hydrated for optimal muscle protein synthesis'
+        };
+      case 'body recomp':
+        return { 
+          min: Math.round((baseWater + 0.3) * 10) / 10, 
+          max: Math.round((baseWater + 1) * 10) / 10, 
+          recommended: Math.round((baseWater + 0.7) * 10) / 10,
+          tip: 'Proper hydration supports both fat loss and muscle gain'
+        };
+      default:
+        return { 
+          min: Math.round(baseWater * 10) / 10, 
+          max: Math.round((baseWater + 0.5) * 10) / 10, 
+          recommended: Math.round((baseWater + 0.3) * 10) / 10,
+          tip: 'Consistent hydration improves energy and focus'
+        };
+    }
+  };
+
+  const waterIntake = getWaterIntake();
+
+  // Sleep recommendations based on goal and age
+  const getSleepRecommendation = () => {
+    let minHours, maxHours, recommended, quality;
+    
+    // Age-based adjustments
+    if (age && age < 25) {
+      minHours = 7;
+      maxHours = 9;
+    } else if (age && age > 50) {
+      minHours = 7;
+      maxHours = 8;
+    } else {
+      minHours = 7;
+      maxHours = 9;
+    }
+    
+    switch(goal?.toLowerCase()) {
+      case 'fat loss':
+        recommended = 8;
+        quality = 'Sleep deprivation increases hunger hormones (ghrelin) and cravings';
+        break;
+      case 'muscle':
+        recommended = 8.5;
+        quality = 'Growth hormone is released during deep sleep - crucial for gains';
+        break;
+      case 'body recomp':
+        recommended = 8;
+        quality = 'Quality sleep optimizes hormones for both fat loss and muscle building';
+        break;
+      default:
+        recommended = 7.5;
+        quality = 'Consistent sleep schedule improves overall health and energy';
+    }
+    
+    return { min: minHours, max: maxHours, recommended, quality };
+  };
+
+  const sleepRecommendation = getSleepRecommendation();
+
+  // Daily fiber goal
+  const getFiberGoal = () => {
+    // Base: 14g per 1000 calories
+    const baseCalories = calorieTarget.recommended || 2000;
+    const baseFiber = Math.round((baseCalories / 1000) * 14);
+    
+    switch(goal?.toLowerCase()) {
+      case 'fat loss':
+        // Higher fiber for satiety
+        return { min: baseFiber, max: baseFiber + 10, recommended: baseFiber + 5, tip: 'Fiber keeps you full longer' };
+      case 'muscle':
+        return { min: baseFiber - 5, max: baseFiber + 5, recommended: baseFiber, tip: 'Moderate fiber supports digestion without excess fullness' };
+      default:
+        return { min: baseFiber - 3, max: baseFiber + 5, recommended: baseFiber, tip: 'Fiber supports gut health and digestion' };
+    }
+  };
+
+  const fiberGoal = getFiberGoal();
+
+  // Weekly workout split recommendations
+  const getWeeklyWorkoutSplit = () => {
+    switch(goal?.toLowerCase()) {
+      case 'fat loss':
+        return {
+          schedule: [
+            { day: 'Monday', workout: 'HIIT Cardio + Abs', duration: '45 min', icon: '🔥' },
+            { day: 'Tuesday', workout: 'Full Body Strength', duration: '50 min', icon: '💪' },
+            { day: 'Wednesday', workout: 'Steady State Cardio', duration: '40 min', icon: '🚶' },
+            { day: 'Thursday', workout: 'Upper Body + HIIT', duration: '50 min', icon: '🏋️' },
+            { day: 'Friday', workout: 'Lower Body Strength', duration: '45 min', icon: '🦵' },
+            { day: 'Saturday', workout: 'Active Recovery/Yoga', duration: '30 min', icon: '🧘' },
+            { day: 'Sunday', workout: 'Rest or Light Walk', duration: '20-30 min', icon: '😴' }
+          ],
+          restDays: 1,
+          activeDays: 6
+        };
+      case 'muscle':
+        return {
+          schedule: [
+            { day: 'Monday', workout: 'Chest & Triceps', duration: '60 min', icon: '💪' },
+            { day: 'Tuesday', workout: 'Back & Biceps', duration: '60 min', icon: '🔙' },
+            { day: 'Wednesday', workout: 'Legs & Glutes', duration: '65 min', icon: '🦵' },
+            { day: 'Thursday', workout: 'Shoulders & Arms', duration: '55 min', icon: '💪' },
+            { day: 'Friday', workout: 'Chest & Back', duration: '60 min', icon: '🏋️' },
+            { day: 'Saturday', workout: 'Legs & Core', duration: '60 min', icon: '🦵' },
+            { day: 'Sunday', workout: 'Rest & Recovery', duration: 'Full rest', icon: '😴' }
+          ],
+          restDays: 1,
+          activeDays: 6
+        };
+      case 'body recomp':
+        return {
+          schedule: [
+            { day: 'Monday', workout: 'Upper Body Push', duration: '55 min', icon: '💪' },
+            { day: 'Tuesday', workout: 'Lower Body + Cardio', duration: '50 min', icon: '🦵' },
+            { day: 'Wednesday', workout: 'Active Recovery', duration: '30 min', icon: '🧘' },
+            { day: 'Thursday', workout: 'Upper Body Pull', duration: '55 min', icon: '🔙' },
+            { day: 'Friday', workout: 'Lower Body Heavy', duration: '55 min', icon: '🏋️' },
+            { day: 'Saturday', workout: 'HIIT or Sports', duration: '40 min', icon: '🔥' },
+            { day: 'Sunday', workout: 'Complete Rest', duration: 'Full rest', icon: '😴' }
+          ],
+          restDays: 2,
+          activeDays: 5
+        };
+      default:
+        return {
+          schedule: [
+            { day: 'Monday', workout: 'Full Body Strength', duration: '45 min', icon: '💪' },
+            { day: 'Tuesday', workout: 'Cardio & Core', duration: '40 min', icon: '🏃' },
+            { day: 'Wednesday', workout: 'Rest or Yoga', duration: '30 min', icon: '🧘' },
+            { day: 'Thursday', workout: 'Upper Body', duration: '45 min', icon: '💪' },
+            { day: 'Friday', workout: 'Lower Body', duration: '45 min', icon: '🦵' },
+            { day: 'Saturday', workout: 'Active Fun', duration: '30-60 min', icon: '🚴' },
+            { day: 'Sunday', workout: 'Full Rest', duration: 'Rest', icon: '😴' }
+          ],
+          restDays: 2,
+          activeDays: 5
+        };
+    }
+  };
+
+  const weeklyWorkoutSplit = getWeeklyWorkoutSplit();
+
+  // Heart rate zones for cardio
+  const getHeartRateZones = () => {
+    const maxHR = age ? 220 - age : 185;
+    
+    return {
+      maxHR,
+      zones: [
+        { name: 'Recovery', range: `${Math.round(maxHR * 0.5)}-${Math.round(maxHR * 0.6)}`, percent: '50-60%', color: '#3498db', description: 'Light activity, warm-up' },
+        { name: 'Fat Burn', range: `${Math.round(maxHR * 0.6)}-${Math.round(maxHR * 0.7)}`, percent: '60-70%', color: '#00d4aa', description: 'Steady cardio, fat oxidation' },
+        { name: 'Cardio', range: `${Math.round(maxHR * 0.7)}-${Math.round(maxHR * 0.8)}`, percent: '70-80%', color: '#ffc107', description: 'Aerobic fitness improvement' },
+        { name: 'Threshold', range: `${Math.round(maxHR * 0.8)}-${Math.round(maxHR * 0.9)}`, percent: '80-90%', color: '#ff6b35', description: 'High intensity, HIIT' },
+        { name: 'Maximum', range: `${Math.round(maxHR * 0.9)}-${maxHR}`, percent: '90-100%', color: '#ff4757', description: 'Peak effort, sprints' }
+      ],
+      recommended: goal?.toLowerCase() === 'fat loss' ? 'Fat Burn & Threshold' : 
+                   goal?.toLowerCase() === 'muscle' ? 'Recovery & Fat Burn' :
+                   goal?.toLowerCase() === 'body recomp' ? 'Fat Burn & Cardio' : 'All zones'
+    };
+  };
+
+  const heartRateZones = getHeartRateZones();
+
+  // Recovery recommendations
+  const getRecoveryTips = () => {
+    const baseTips = [
+      { icon: '🧊', title: 'Cold Exposure', desc: 'Cold showers reduce inflammation and speed recovery' },
+      { icon: '🎾', title: 'Foam Rolling', desc: 'Self-myofascial release improves mobility' },
+      { icon: '💆', title: 'Stretching', desc: '10-15 min daily improves flexibility' }
+    ];
+    
+    switch(goal?.toLowerCase()) {
+      case 'fat loss':
+        return [
+          ...baseTips,
+          { icon: '🚶', title: 'Active Recovery', desc: 'Light walks on rest days burn extra calories' },
+          { icon: '🧘', title: 'Yoga', desc: 'Reduces cortisol which can cause fat storage' }
+        ];
+      case 'muscle':
+        return [
+          { icon: '😴', title: 'Sleep Priority', desc: 'Growth hormone peaks during deep sleep' },
+          { icon: '🍗', title: 'Post-Workout Protein', desc: 'Consume protein within 2 hours of training' },
+          ...baseTips,
+          { icon: '🛀', title: 'Epsom Salt Bath', desc: 'Magnesium absorption aids muscle recovery' }
+        ];
+      case 'body recomp':
+        return [
+          { icon: '⚖️', title: 'Calorie Cycling', desc: 'Higher calories on training days' },
+          { icon: '😴', title: 'Sleep 8+ Hours', desc: 'Critical for both fat loss and muscle' },
+          ...baseTips
+        ];
+      default:
+        return baseTips;
+    }
+  };
+
+  const recoveryTips = getRecoveryTips();
+
+  // Supplement recommendations based on goal
+  const getSupplementRecommendations = () => {
+    const base = [
+      { name: 'Multivitamin', priority: 'Essential', icon: '💊' },
+      { name: 'Vitamin D3', priority: 'High', icon: '☀️' },
+      { name: 'Omega-3', priority: 'High', icon: '🐟' }
+    ];
+    
+    switch(goal?.toLowerCase()) {
+      case 'fat loss':
+        return [
+          ...base,
+          { name: 'Green Tea Extract', priority: 'Optional', icon: '🍵' },
+          { name: 'L-Carnitine', priority: 'Optional', icon: '🔥' },
+          { name: 'Caffeine', priority: 'Optional', icon: '☕' }
+        ];
+      case 'muscle':
+        return [
+          { name: 'Whey Protein', priority: 'Essential', icon: '🥛' },
+          { name: 'Creatine Monohydrate', priority: 'Essential', icon: '💪' },
+          ...base,
+          { name: 'BCAAs', priority: 'Optional', icon: '🧪' },
+          { name: 'ZMA', priority: 'Optional', icon: '😴' }
+        ];
+      case 'body recomp':
+        return [
+          { name: 'Whey Protein', priority: 'Essential', icon: '🥛' },
+          { name: 'Creatine', priority: 'High', icon: '💪' },
+          ...base,
+          { name: 'Caffeine (pre-workout)', priority: 'Optional', icon: '☕' }
+        ];
+      default:
+        return base;
+    }
+  };
+
+  const supplementRecommendations = getSupplementRecommendations();
+
+  // Meal timing recommendations
+  const getMealTiming = () => {
+    switch(goal?.toLowerCase()) {
+      case 'fat loss':
+        return {
+          meals: 3,
+          snacks: 1,
+          timing: [
+            { meal: 'Breakfast', time: '8:00 AM', notes: 'High protein, moderate carbs' },
+            { meal: 'Lunch', time: '12:30 PM', notes: 'Largest meal, balanced macros' },
+            { meal: 'Snack', time: '4:00 PM', notes: 'Protein + fiber (optional)' },
+            { meal: 'Dinner', time: '7:00 PM', notes: 'Light, protein-focused' }
+          ],
+          fastingWindow: '8PM - 8AM (12 hours)',
+          tip: 'Consider 16:8 intermittent fasting for enhanced fat loss'
+        };
+      case 'muscle':
+        return {
+          meals: 4,
+          snacks: 2,
+          timing: [
+            { meal: 'Breakfast', time: '7:00 AM', notes: 'High protein + carbs' },
+            { meal: 'Pre-Workout', time: '11:00 AM', notes: 'Carbs + moderate protein' },
+            { meal: 'Post-Workout', time: '2:00 PM', notes: 'Fast protein + carbs' },
+            { meal: 'Dinner', time: '6:00 PM', notes: 'Protein + carbs + fats' },
+            { meal: 'Pre-Sleep', time: '9:00 PM', notes: 'Casein protein or cottage cheese' }
+          ],
+          fastingWindow: 'Not recommended',
+          tip: 'Spread protein evenly across meals (30-40g each)'
+        };
+      case 'body recomp':
+        return {
+          meals: 4,
+          snacks: 1,
+          timing: [
+            { meal: 'Breakfast', time: '8:00 AM', notes: 'Protein-rich start' },
+            { meal: 'Lunch', time: '12:00 PM', notes: 'Balanced macros' },
+            { meal: 'Pre/Post Workout', time: '4:00 PM', notes: 'Carbs around training' },
+            { meal: 'Dinner', time: '7:30 PM', notes: 'Protein + vegetables' }
+          ],
+          fastingWindow: 'Optional 14:10 on rest days',
+          tip: 'Eat more carbs on training days, fewer on rest days'
+        };
+      default:
+        return {
+          meals: 3,
+          snacks: 2,
+          timing: [
+            { meal: 'Breakfast', time: '8:00 AM', notes: 'Balanced start' },
+            { meal: 'Lunch', time: '12:30 PM', notes: 'Moderate portions' },
+            { meal: 'Dinner', time: '7:00 PM', notes: 'Light and nutritious' }
+          ],
+          fastingWindow: 'Natural overnight fast',
+          tip: 'Eat at consistent times each day'
+        };
+    }
+  };
+
+  const mealTiming = getMealTiming();
+
+  // Progress milestones based on goal
+  const getProgressMilestones = () => {
+    switch(goal?.toLowerCase()) {
+      case 'fat loss':
+        return [
+          { week: 1, milestone: 'Establish routine, track everything', icon: '📝' },
+          { week: 2, milestone: 'Notice reduced cravings', icon: '🎯' },
+          { week: 4, milestone: 'Visible changes, clothes fit better', icon: '👔' },
+          { week: 8, milestone: 'Significant transformation', icon: '🔥' },
+          { week: 12, milestone: 'Goal weight achievable', icon: '🏆' }
+        ];
+      case 'muscle':
+        return [
+          { week: 1, milestone: 'Learn proper form', icon: '📚' },
+          { week: 4, milestone: 'Strength gains noticeable', icon: '💪' },
+          { week: 8, milestone: 'Visible muscle definition', icon: '👀' },
+          { week: 12, milestone: 'Significant size increase', icon: '📈' },
+          { week: 24, milestone: 'Major transformation', icon: '🏆' }
+        ];
+      case 'body recomp':
+        return [
+          { week: 2, milestone: 'Routine established', icon: '📝' },
+          { week: 6, milestone: 'Scale stable, body changing', icon: '⚖️' },
+          { week: 12, milestone: 'Clothes fit differently', icon: '👔' },
+          { week: 16, milestone: 'Clear visual progress', icon: '📸' },
+          { week: 24, milestone: 'Full body recomposition', icon: '🏆' }
+        ];
+      default:
+        return [
+          { week: 1, milestone: 'Start moving daily', icon: '🚶' },
+          { week: 4, milestone: 'Energy levels improve', icon: '⚡' },
+          { week: 8, milestone: 'Fitness becomes habit', icon: '✅' },
+          { week: 12, milestone: 'Measurable improvements', icon: '📊' }
+        ];
+    }
+  };
+
+  const progressMilestones = getProgressMilestones();
+
   // Get today's date as a number for rotating tips
   const today = new Date();
   const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
@@ -1195,6 +1583,218 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
           </ul>
         </div>
 
+      </div>
+
+      {/* Fitness Metrics Section */}
+      <div className="fitness-metrics-section">
+        <div className="section-header">
+          <div className="section-icon">📊</div>
+          <div>
+            <h2 className="section-title">Your Fitness Metrics</h2>
+            <p className="section-subtitle">Personalized targets based on your profile</p>
+          </div>
+        </div>
+
+        <div className="metrics-grid">
+          {/* BMI Card */}
+          {bmiData && (
+            <div className="metric-card bmi-card">
+              <div className="metric-header">
+                <span className="metric-icon">📏</span>
+                <h4>BMI Status</h4>
+              </div>
+              <div className="metric-value-large" style={{ color: bmiData.color }}>
+                {bmiData.value}
+              </div>
+              <div className="metric-label-badge" style={{ backgroundColor: `${bmiData.color}20`, color: bmiData.color }}>
+                {bmiData.category}
+              </div>
+              <p className="metric-tip">{bmiData.recommendation}</p>
+            </div>
+          )}
+
+          {/* Water Intake Card */}
+          <div className="metric-card water-card">
+            <div className="metric-header">
+              <span className="metric-icon">💧</span>
+              <h4>Daily Water Intake</h4>
+            </div>
+            <div className="metric-value-large water-value">
+              {waterIntake.recommended}L
+            </div>
+            <div className="metric-range">
+              Range: {waterIntake.min}L - {waterIntake.max}L
+            </div>
+            <p className="metric-tip">{waterIntake.tip}</p>
+          </div>
+
+          {/* Sleep Card */}
+          <div className="metric-card sleep-card">
+            <div className="metric-header">
+              <span className="metric-icon">😴</span>
+              <h4>Sleep Target</h4>
+            </div>
+            <div className="metric-value-large sleep-value">
+              {sleepRecommendation.recommended}h
+            </div>
+            <div className="metric-range">
+              Optimal: {sleepRecommendation.min}-{sleepRecommendation.max} hours
+            </div>
+            <p className="metric-tip">{sleepRecommendation.quality}</p>
+          </div>
+
+          {/* Fiber Card */}
+          <div className="metric-card fiber-card">
+            <div className="metric-header">
+              <span className="metric-icon">🥬</span>
+              <h4>Daily Fiber Goal</h4>
+            </div>
+            <div className="metric-value-large fiber-value">
+              {fiberGoal.recommended}g
+            </div>
+            <div className="metric-range">
+              Range: {fiberGoal.min}g - {fiberGoal.max}g
+            </div>
+            <p className="metric-tip">{fiberGoal.tip}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Weekly Workout Schedule */}
+      <div className="weekly-schedule-section">
+        <div className="section-header">
+          <div className="section-icon">📅</div>
+          <div>
+            <h2 className="section-title">Weekly Workout Schedule</h2>
+            <p className="section-subtitle">{weeklyWorkoutSplit.activeDays} training days, {weeklyWorkoutSplit.restDays} rest day(s)</p>
+          </div>
+        </div>
+
+        <div className="weekly-schedule-grid">
+          {weeklyWorkoutSplit.schedule.map((day, idx) => (
+            <div key={idx} className={`schedule-day-card ${day.workout.includes('Rest') ? 'rest-day' : ''}`}>
+              <div className="day-name">{day.day}</div>
+              <div className="day-icon">{day.icon}</div>
+              <div className="day-workout">{day.workout}</div>
+              <div className="day-duration">{day.duration}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Heart Rate Zones */}
+      <div className="heart-rate-section">
+        <div className="section-header">
+          <div className="section-icon">❤️</div>
+          <div>
+            <h2 className="section-title">Heart Rate Training Zones</h2>
+            <p className="section-subtitle">Max HR: {heartRateZones.maxHR} BPM | Recommended: {heartRateZones.recommended}</p>
+          </div>
+        </div>
+
+        <div className="hr-zones-container">
+          {heartRateZones.zones.map((zone, idx) => (
+            <div key={idx} className="hr-zone-card" style={{ borderLeftColor: zone.color }}>
+              <div className="hr-zone-header">
+                <span className="hr-zone-name" style={{ color: zone.color }}>{zone.name}</span>
+                <span className="hr-zone-percent">{zone.percent}</span>
+              </div>
+              <div className="hr-zone-range">{zone.range} BPM</div>
+              <div className="hr-zone-desc">{zone.description}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Meal Timing */}
+      <div className="meal-timing-section">
+        <div className="section-header">
+          <div className="section-icon">⏰</div>
+          <div>
+            <h2 className="section-title">Optimal Meal Timing</h2>
+            <p className="section-subtitle">{mealTiming.meals} meals + {mealTiming.snacks} snack(s) | Fasting: {mealTiming.fastingWindow}</p>
+          </div>
+        </div>
+
+        <div className="meal-timing-grid">
+          {mealTiming.timing.map((meal, idx) => (
+            <div key={idx} className="meal-timing-card">
+              <div className="meal-timing-time">{meal.time}</div>
+              <div className="meal-timing-name">{meal.meal}</div>
+              <div className="meal-timing-notes">{meal.notes}</div>
+            </div>
+          ))}
+        </div>
+        <div className="meal-timing-tip">💡 {mealTiming.tip}</div>
+      </div>
+
+      {/* Recovery Tips */}
+      <div className="recovery-section">
+        <div className="section-header">
+          <div className="section-icon">🔄</div>
+          <div>
+            <h2 className="section-title">Recovery Recommendations</h2>
+            <p className="section-subtitle">Optimize your rest for better results</p>
+          </div>
+        </div>
+
+        <div className="recovery-grid">
+          {recoveryTips.map((tip, idx) => (
+            <div key={idx} className="recovery-card">
+              <span className="recovery-icon">{tip.icon}</span>
+              <div className="recovery-content">
+                <h4>{tip.title}</h4>
+                <p>{tip.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Supplements */}
+      <div className="supplements-section">
+        <div className="section-header">
+          <div className="section-icon">💊</div>
+          <div>
+            <h2 className="section-title">Supplement Guide</h2>
+            <p className="section-subtitle">Recommended for your {goal || 'fitness'} goal</p>
+          </div>
+        </div>
+
+        <div className="supplements-grid">
+          {supplementRecommendations.map((supp, idx) => (
+            <div key={idx} className={`supplement-card priority-${supp.priority.toLowerCase()}`}>
+              <span className="supplement-icon">{supp.icon}</span>
+              <div className="supplement-name">{supp.name}</div>
+              <div className={`supplement-priority ${supp.priority.toLowerCase()}`}>{supp.priority}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Progress Milestones */}
+      <div className="milestones-section">
+        <div className="section-header">
+          <div className="section-icon">🏆</div>
+          <div>
+            <h2 className="section-title">Your Progress Journey</h2>
+            <p className="section-subtitle">What to expect on your fitness path</p>
+          </div>
+        </div>
+
+        <div className="milestones-timeline">
+          {progressMilestones.map((milestone, idx) => (
+            <div key={idx} className="milestone-item">
+              <div className="milestone-marker">
+                <span className="milestone-icon">{milestone.icon}</span>
+              </div>
+              <div className="milestone-content">
+                <div className="milestone-week">Week {milestone.week}</div>
+                <div className="milestone-text">{milestone.milestone}</div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Motivational Quote */}
