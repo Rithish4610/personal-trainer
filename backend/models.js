@@ -1,5 +1,5 @@
 // Models for User, Food, Entry, Streak (using raw SQL via db.js)
-const db = require('./db');
+const db = require('./db')
 
 // User CRUD
 const createUser = (username, password, weight, dob, goal, cb) => {
