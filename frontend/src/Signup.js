@@ -29,6 +29,7 @@ function Signup({ onSignup }) {
   const goals = [
     { value: 'fat loss', label: '🔥 Fat Loss', desc: 'Burn calories and lose weight' },
     { value: 'muscle', label: '💪 Build Muscle', desc: 'Gain strength and size' },
+    { value: 'body recomp', label: '⚖️ Body Recomp', desc: 'Lose fat and build muscle' },
     { value: 'general fitness', label: '🏃 General Fitness', desc: 'Stay active and healthy' }
   ];
 
