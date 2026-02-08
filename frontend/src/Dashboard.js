@@ -183,6 +183,7 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
   const [nightFoods, setNightFoods] = useState(['']);
   const [results, setResults] = useState(null);
   const [showProfile, setShowProfile] = useState(false);
+  const [showFoodTracker, setShowFoodTracker] = useState(false);
   const foodTrackerRef = useRef(null);
 
   // Calculate age from DOB
@@ -1434,14 +1435,19 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
       <div className="quick-action-container">
         <button 
           className="food-tracker-btn" 
-          onClick={() => foodTrackerRef.current?.scrollIntoView({ behavior: 'smooth' })}
+          onClick={() => {
+            setShowFoodTracker(!showFoodTracker);
+            if (!showFoodTracker) {
+              setTimeout(() => foodTrackerRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
+            }
+          }}
         >
           <span className="food-tracker-btn-icon">🍴</span>
           <div className="food-tracker-btn-content">
             <span className="food-tracker-btn-title">Food Tracker</span>
             <span className="food-tracker-btn-subtitle">Log your meals and track your nutrition</span>
           </div>
-          <span className="food-tracker-btn-arrow">→</span>
+          <span className="food-tracker-btn-arrow">{showFoodTracker ? '↓' : '→'}</span>
         </button>
       </div>
 
@@ -1803,16 +1809,17 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
       </div>
 
       {/* Food Tracker Section */}
-      <div className="food-tracker-section" ref={foodTrackerRef}>
-        <div className="section-header">
-          <div className="section-icon">🍴</div>
-          <div>
-            <h2 className="section-title">Food Tracker</h2>
-            <p className="section-subtitle">Log your meals and track your nutrition</p>
+      {showFoodTracker && (
+        <div className="food-tracker-section" ref={foodTrackerRef}>
+          <div className="section-header">
+            <div className="section-icon">🍴</div>
+            <div>
+              <h2 className="section-title">Food Tracker</h2>
+              <p className="section-subtitle">Log your meals and track your nutrition</p>
+            </div>
           </div>
-        </div>
 
-        <MealSection 
+          <MealSection 
           label="Morning" 
           foods={morningFoods} 
           setFoods={setMorningFoods} 
@@ -1884,7 +1891,8 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
             <span>📊</span> Calculate Total Nutrition
           </button>
         )}
-      </div>
+        </div>
+      )}
 
       {results && <FoodResultsDashboard results={results} />}
     </div>
