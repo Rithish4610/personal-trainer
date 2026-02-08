@@ -1518,10 +1518,10 @@ body {
   flex-shrink: 0;
 }
 
-.meal-morning .meal-icon { background: linear-gradient(135deg, #ff9a56 0%, #ff6b35 100%); }
-.meal-evening .meal-icon { background: linear-gradient(135deg, #00e6b8 0%, #00d4aa 100%); }
-.meal-post-evening .meal-icon { background: linear-gradient(135deg, #8b7cf0 0%, #6c5ce7 100%); }
-.meal-night .meal-icon { background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%); }
+.meal-breakfast .meal-icon { background: linear-gradient(135deg, #ff9a56 0%, #ff6b35 100%); }
+.meal-lunch .meal-icon { background: linear-gradient(135deg, #00e6b8 0%, #00d4aa 100%); }
+.meal-post-lunch .meal-icon { background: linear-gradient(135deg, #8b7cf0 0%, #6c5ce7 100%); }
+.meal-dinner .meal-icon { background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%); }
 
 .meal-title {
   font-size: 16px;

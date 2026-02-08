@@ -1207,24 +1207,24 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
   const handleCalculate = () => {
     const resultArr = [];
     
-    // Process morning foods
+    // Process breakfast foods
     morningFoods.filter(f => f.trim()).forEach(food => {
-      resultArr.push({ time: 'Morning', ...parseFoodEntry(food) });
+      resultArr.push({ time: 'Breakfast', ...parseFoodEntry(food) });
     });
     
-    // Process evening foods
+    // Process lunch foods
     eveningFoods.filter(f => f.trim()).forEach(food => {
-      resultArr.push({ time: 'Evening', ...parseFoodEntry(food) });
+      resultArr.push({ time: 'Lunch', ...parseFoodEntry(food) });
     });
     
-    // Process post evening foods
+    // Process post lunch foods
     postEveningFoods.filter(f => f.trim()).forEach(food => {
-      resultArr.push({ time: 'Post Evening', ...parseFoodEntry(food) });
+      resultArr.push({ time: 'Post Lunch', ...parseFoodEntry(food) });
     });
     
-    // Process night foods
+    // Process dinner foods
     nightFoods.filter(f => f.trim()).forEach(food => {
-      resultArr.push({ time: 'Night', ...parseFoodEntry(food) });
+      resultArr.push({ time: 'Dinner', ...parseFoodEntry(food) });
     });
     
     setResults(resultArr);
@@ -1820,11 +1820,11 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
           </div>
 
           <MealSection 
-          label="Morning" 
+          label="Breakfast" 
           foods={morningFoods} 
           setFoods={setMorningFoods} 
           placeholder="e.g., egg 3, brown bread 2, milk 200" 
-          mealClass="meal-morning"
+          mealClass="meal-breakfast"
           icon="🌅"
           time="6:00 AM - 10:00 AM"
           getSuggestions={getSuggestions}
@@ -1832,11 +1832,11 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
           calculateMeal={calculateMeal}
         />
         <MealSection 
-          label="Evening" 
+          label="Lunch" 
           foods={eveningFoods} 
           setFoods={setEveningFoods} 
           placeholder="e.g., rice 200, chicken 150, dal 100" 
-          mealClass="meal-evening"
+          mealClass="meal-lunch"
           icon="☀️"
           time="12:00 PM - 2:00 PM"
           getSuggestions={getSuggestions}
@@ -1844,11 +1844,11 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
           calculateMeal={calculateMeal}
         />
         <MealSection 
-          label="Post Evening" 
+          label="Post Lunch" 
           foods={postEveningFoods} 
           setFoods={setPostEveningFoods} 
           placeholder="e.g., banana 2, almonds 30" 
-          mealClass="meal-post-evening"
+          mealClass="meal-post-lunch"
           icon="🌆"
           time="4:00 PM - 6:00 PM"
           getSuggestions={getSuggestions}
@@ -1856,11 +1856,11 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
           calculateMeal={calculateMeal}
         />
         <MealSection 
-          label="Night" 
+          label="Dinner" 
           foods={nightFoods} 
           setFoods={setNightFoods} 
           placeholder="e.g., chapathi 3, paneer 100" 
-          mealClass="meal-night"
+          mealClass="meal-dinner"
           icon="🌙"
           time="7:00 PM - 9:00 PM"
           getSuggestions={getSuggestions}

@@ -12,10 +12,10 @@ function FoodResultsDashboard({ results }) {
   // Get time icon
   const getTimeIcon = (time) => {
     switch(time) {
-      case 'Morning': return '🌅';
-      case 'Evening': return '☀️';
-      case 'Post Evening': return '🌆';
-      case 'Night': return '🌙';
+      case 'Breakfast': return '🌅';
+      case 'Lunch': return '☀️';
+      case 'Post Lunch': return '🌆';
+      case 'Dinner': return '🌙';
       default: return '🍽️';
     }
   };
