@@ -1354,6 +1354,94 @@ body {
 }
 
 /* ============================================
+   FOOD TRACKER QUICK ACTION BUTTON
+   ============================================ */
+.quick-action-container {
+  margin: var(--space-xl) 0;
+}
+
+.food-tracker-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-xl) var(--space-2xl);
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.15) 0%, rgba(0, 212, 170, 0.1) 100%);
+  border: 1px solid var(--primary);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: var(--transition-base);
+  text-align: left;
+}
+
+.food-tracker-btn:hover {
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.25) 0%, rgba(0, 212, 170, 0.15) 100%);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow-primary);
+}
+
+.food-tracker-btn-icon {
+  width: 64px;
+  height: 64px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.food-tracker-btn-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.food-tracker-btn-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.food-tracker-btn-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.food-tracker-btn-arrow {
+  font-size: 24px;
+  color: var(--primary);
+  transition: var(--transition-fast);
+}
+
+.food-tracker-btn:hover .food-tracker-btn-arrow {
+  transform: translateX(4px);
+}
+
+@media (max-width: 600px) {
+  .food-tracker-btn {
+    padding: var(--space-lg);
+  }
+  
+  .food-tracker-btn-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+  }
+  
+  .food-tracker-btn-title {
+    font-size: 16px;
+  }
+  
+  .food-tracker-btn-subtitle {
+    font-size: 12px;
+  }
+}
+
+/* ============================================
    FOOD TRACKER SECTION
    ============================================ */
 .food-tracker-section {

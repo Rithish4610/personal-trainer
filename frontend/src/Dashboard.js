@@ -1,6 +1,6 @@
 
 
-import React, { useState, useCallback, memo } from 'react';
+import React, { useState, useCallback, memo, useRef } from 'react';
 import FoodResultsDashboard from './FoodResultsDashboard';
 
 // FoodInput component moved outside Dashboard to prevent re-creation on each render
@@ -183,6 +183,7 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
   const [nightFoods, setNightFoods] = useState(['']);
   const [results, setResults] = useState(null);
   const [showProfile, setShowProfile] = useState(false);
+  const foodTrackerRef = useRef(null);
 
   // Calculate age from DOB
   const calculateAge = (dobString) => {
@@ -1429,6 +1430,21 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
         </div>
       </div>
 
+      {/* Food Tracker Quick Action Button */}
+      <div className="quick-action-container">
+        <button 
+          className="food-tracker-btn" 
+          onClick={() => foodTrackerRef.current?.scrollIntoView({ behavior: 'smooth' })}
+        >
+          <span className="food-tracker-btn-icon">🍴</span>
+          <div className="food-tracker-btn-content">
+            <span className="food-tracker-btn-title">Food Tracker</span>
+            <span className="food-tracker-btn-subtitle">Log your meals and track your nutrition</span>
+          </div>
+          <span className="food-tracker-btn-arrow">→</span>
+        </button>
+      </div>
+
       {/* Personal Trainer Card */}
       <div className="trainer-card">
         <div className="trainer-header">
@@ -1787,7 +1803,7 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
       </div>
 
       {/* Food Tracker Section */}
-      <div className="food-tracker-section">
+      <div className="food-tracker-section" ref={foodTrackerRef}>
         <div className="section-header">
           <div className="section-icon">🍴</div>
           <div>
