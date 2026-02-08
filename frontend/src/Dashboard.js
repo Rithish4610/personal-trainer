@@ -605,44 +605,6 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
 
   const recoveryTips = getRecoveryTips();
 
-  // Supplement recommendations based on goal
-  const getSupplementRecommendations = () => {
-    const base = [
-      { name: 'Multivitamin', priority: 'Essential', icon: '💊' },
-      { name: 'Vitamin D3', priority: 'High', icon: '☀️' },
-      { name: 'Omega-3', priority: 'High', icon: '🐟' }
-    ];
-    
-    switch(goal?.toLowerCase()) {
-      case 'fat loss':
-        return [
-          ...base,
-          { name: 'Green Tea Extract', priority: 'Optional', icon: '🍵' },
-          { name: 'L-Carnitine', priority: 'Optional', icon: '🔥' },
-          { name: 'Caffeine', priority: 'Optional', icon: '☕' }
-        ];
-      case 'muscle':
-        return [
-          { name: 'Whey Protein', priority: 'Essential', icon: '🥛' },
-          { name: 'Creatine Monohydrate', priority: 'Essential', icon: '💪' },
-          ...base,
-          { name: 'BCAAs', priority: 'Optional', icon: '🧪' },
-          { name: 'ZMA', priority: 'Optional', icon: '😴' }
-        ];
-      case 'body recomp':
-        return [
-          { name: 'Whey Protein', priority: 'Essential', icon: '🥛' },
-          { name: 'Creatine', priority: 'High', icon: '💪' },
-          ...base,
-          { name: 'Caffeine (pre-workout)', priority: 'Optional', icon: '☕' }
-        ];
-      default:
-        return base;
-    }
-  };
-
-  const supplementRecommendations = getSupplementRecommendations();
-
   // Meal timing recommendations
   const getMealTiming = () => {
     switch(goal?.toLowerCase()) {
@@ -1751,27 +1713,6 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
                 <h4>{tip.title}</h4>
                 <p>{tip.desc}</p>
               </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Supplements */}
-      <div className="supplements-section">
-        <div className="section-header">
-          <div className="section-icon">💊</div>
-          <div>
-            <h2 className="section-title">Supplement Guide</h2>
-            <p className="section-subtitle">Recommended for your {goal || 'fitness'} goal</p>
-          </div>
-        </div>
-
-        <div className="supplements-grid">
-          {supplementRecommendations.map((supp, idx) => (
-            <div key={idx} className={`supplement-card priority-${supp.priority.toLowerCase()}`}>
-              <span className="supplement-icon">{supp.icon}</span>
-              <div className="supplement-name">{supp.name}</div>
-              <div className={`supplement-priority ${supp.priority.toLowerCase()}`}>{supp.priority}</div>
             </div>
           ))}
         </div>
