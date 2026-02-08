@@ -1596,23 +1596,6 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
         </div>
 
         <div className="metrics-grid">
-          {/* BMI Card */}
-          {bmiData && (
-            <div className="metric-card bmi-card">
-              <div className="metric-header">
-                <span className="metric-icon">📏</span>
-                <h4>BMI Status</h4>
-              </div>
-              <div className="metric-value-large" style={{ color: bmiData.color }}>
-                {bmiData.value}
-              </div>
-              <div className="metric-label-badge" style={{ backgroundColor: `${bmiData.color}20`, color: bmiData.color }}>
-                {bmiData.category}
-              </div>
-              <p className="metric-tip">{bmiData.recommendation}</p>
-            </div>
-          )}
-
           {/* Water Intake Card */}
           <div className="metric-card water-card">
             <div className="metric-header">
