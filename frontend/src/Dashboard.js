@@ -1649,30 +1649,6 @@ function Dashboard({ goal, weight, dob, username, onLogout }) {
         </div>
       </div>
 
-      {/* Heart Rate Zones */}
-      <div className="heart-rate-section">
-        <div className="section-header">
-          <div className="section-icon">❤️</div>
-          <div>
-            <h2 className="section-title">Heart Rate Training Zones</h2>
-            <p className="section-subtitle">Max HR: {heartRateZones.maxHR} BPM | Recommended: {heartRateZones.recommended}</p>
-          </div>
-        </div>
-
-        <div className="hr-zones-container">
-          {heartRateZones.zones.map((zone, idx) => (
-            <div key={idx} className="hr-zone-card" style={{ borderLeftColor: zone.color }}>
-              <div className="hr-zone-header">
-                <span className="hr-zone-name" style={{ color: zone.color }}>{zone.name}</span>
-                <span className="hr-zone-percent">{zone.percent}</span>
-              </div>
-              <div className="hr-zone-range">{zone.range} BPM</div>
-              <div className="hr-zone-desc">{zone.description}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* Meal Timing */}
       <div className="meal-timing-section">
         <div className="section-header">
