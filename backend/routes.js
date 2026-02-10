@@ -1,5 +1,5 @@
 // Express routes for authentication, food logging, summary, feedback, and streaks
-const express = require('express')
+const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const models = require('./models');
