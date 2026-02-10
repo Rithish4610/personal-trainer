@@ -27,7 +27,7 @@ router.post('/signup', async (req, res) => {
   const hash = await bcrypt.hash(password, 10);
   models.createUser(username, hash, weight || null, dob || null, goal || '', (err, userId) => {
     if (err) return res.status(400).json({ error: 'Username already exists' });
-    res.json({ success: true });
+    res.json({ success: true })
   });
 });
 
